@@ -1,0 +1,183 @@
+// PixelVault — Prisma schema
+// SQLite by default (zero-config local + Docker deploys).
+// For Vercel/serverless, switch provider to "postgresql" and set DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Roles: "USER" | "ADMIN" (SQLite has no enums)
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("USER")
+  avatarHue    Int      @default(265)
+  createdAt    DateTime @default(now())
+
+  orders    Order[]
+  reviews   Review[]
+  cartItems CartItem[]
+  wishlist  WishlistItem[]
+  requests  CustomRequest[]
+  messages  RequestMessage[]
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  category        String
+  price           Int // cents
+  oldPrice        Int?
+  description     String
+  longDescription String   @default("")
+  image           String
+  badge           String?
+  // JSON-encoded string arrays
+  formats         String   @default("[]")
+  features        String   @default("[]")
+  tags            String   @default("[]")
+  // Blender / 3D specifics
+  polyCount       String?
+  rigType         String?
+  blenderVersion  String?
+  renderer        String?
+  fileSize        String   @default("120 MB")
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  salesCount      Int      @default(0)
+  featured        Boolean  @default(false)
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  reviews    Review[]
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+  wishlist   WishlistItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+// Order.status: "PENDING" | "PAID" | "FAILED" | "REFUNDED"
+// paymentMethod: "stripe" | "demo"
+model Order {
+  id            String   @id @default(cuid())
+  orderNumber   String   @unique
+  userId        String
+  status        String   @default("PENDING")
+  subtotal      Int
+  discount      Int      @default(0)
+  couponCode    String?
+  total         Int
+  paymentMethod String   @default("demo")
+  paymentRef    String?
+  createdAt     DateTime @default(now())
+  paidAt        DateTime?
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+}
+
+model OrderItem {
+  id            String @id @default(cuid())
+  orderId       String
+  productId     String
+  name          String
+  price         Int
+  downloadToken String @unique @default(cuid())
+  downloads     Int    @default(0)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  rating    Int
+  title     String   @default("")
+  body      String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+// CustomRequest.status: "PENDING" | "REVIEWING" | "QUOTED" | "ACCEPTED" |
+//                       "IN_PROGRESS" | "DELIVERED" | "DECLINED" | "COMPLETED"
+model CustomRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  category    String
+  description String
+  budget      Int?
+  deadline    DateTime?
+  status      String   @default("PENDING")
+  quoteAmount Int?
+  quoteNote   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages RequestMessage[]
+}
+
+model RequestMessage {
+  id        String   @id @default(cuid())
+  requestId String
+  senderId  String
+  body      String
+  createdAt DateTime @default(now())
+
+  request CustomRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender  User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Coupon {
+  id         String  @id @default(cuid())
+  code       String  @unique
+  percentOff Int
+  active     Boolean @default(true)
+  maxUses    Int     @default(1000)
+  uses       Int     @default(0)
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
