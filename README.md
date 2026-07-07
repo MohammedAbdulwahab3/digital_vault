@@ -9,15 +9,37 @@ illustrations. Built with Next.js 15, Prisma and Stripe.
 ## ✨ Features
 
 ### Storefront
-- **Artistic product presentation** — 3D tilt cards with glare tracking, animated
-  gradient auroras, glassmorphism, film grain, a rotating 3D cube viewer on
-  Blender/3D products, format badges, poly-count/rig chips, and staggered
-  scroll reveals (Framer Motion).
+- **Interactive product showcases** — every product page opens with a live,
+  video-player-style preview instead of a static image:
+  - *Web & UI-kit products*: an animated in-browser demo (auto-advancing
+    Overview → Analytics → Kanban scenes with play/pause, seek, progress bars
+    and fullscreen).
+  - *App products*: a phone-framed live app walkthrough (onboarding → home →
+    stats) with screen transitions.
+  - *Blender products*: a real-time **three.js 3D viewer** — drag to orbit,
+    scroll to zoom, turntable and wireframe toggles — showing the same
+    procedural character the download builds in Blender.
+- **Artistic presentation** — 3D tilt cards with glare tracking, animated
+  gradient auroras, glassmorphism, film grain, format badges,
+  poly-count/rig chips, staggered scroll reveals (Framer Motion).
 - **Full catalog** — search, category filters, price caps, five sort orders.
-- **Product pages** — spec grids, feature checklists, long descriptions,
-  related products, verified-purchase reviews.
 - **Cart & wishlist** — guest carts persist in localStorage and merge into the
   account automatically at sign-in; slide-out cart drawer.
+
+### Real downloadable products
+Purchases deliver **actual runnable code**, packaged per platform at download
+time from `product-templates/` (branding, colors and license personalized
+per product and buyer):
+
+| Platform | Package contents |
+|----------|-----------------|
+| ▲ **Next.js** | App Router + TypeScript dashboard, builds with `npm run build` |
+| ⚛ **React**  | Vite + TypeScript SPA of the same template |
+| 🐦 **Flutter** | Material 3 app (3 screens, custom-paint charts), `flutter run` ready |
+| 🔶 **Blender** | Procedural character builder (`build_character.py` + config + export guide for Unity/Unreal/Godot) |
+
+Buyers pick the platform on the Orders page; each ZIP includes a
+personalized commercial LICENSE.txt.
 
 ### Commerce
 - **Payments** — Stripe Checkout (test/live) when keys are configured, with a
@@ -25,7 +47,7 @@ illustrations. Built with Next.js 15, Prisma and Stripe.
   full purchase flow works with zero configuration.
 - **Coupons** — percentage codes with usage caps (`WELCOME10`, `CREATOR25` seeded).
 - **Orders & instant delivery** — tokenized, ownership-checked download
-  endpoint that issues a license bundle per purchased item.
+  endpoint that builds the real per-platform code package on the fly.
 - **Verified reviews** — only paying customers can review; ratings roll up
   onto products automatically.
 
@@ -43,8 +65,9 @@ illustrations. Built with Next.js 15, Prisma and Stripe.
   request pipeline, review moderation.
 
 ### Data
-- **16 realistic seeded products** across 7 categories, 7 users, 11 orders,
-  16 reviews, 3 custom-request threads with messages, and 2 coupons.
+- **14 realistic seeded products** across 4 categories (Web Templates, App
+  Templates, UI Kits, Blender Characters), 7 users, 11 orders, 16 reviews,
+  3 custom-request threads with messages, and 2 coupons.
 
 ## 🚀 Quick start
 
@@ -127,7 +150,8 @@ No code changes are needed — the schema uses no SQLite-specific features.
 ```
 prisma/
   schema.prisma          # 11 models: users, products, orders, requests…
-  seed.ts                # 16 products + users/orders/reviews/requests
+  seed.ts                # 14 products + users/orders/reviews/requests
+product-templates/       # Real code shipped to buyers (nextjs/react/flutter/blender)
 src/
   middleware.ts          # /account + /checkout auth, /admin role gate
   lib/                   # db, auth (JWT), stripe, orders, validation

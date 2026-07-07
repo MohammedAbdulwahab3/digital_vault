@@ -34,6 +34,7 @@ export default async function EditProductPage({
           formats: parseJsonArray(product.formats),
           features: parseJsonArray(product.features),
           tags: parseJsonArray(product.tags),
+          platforms: parseJsonArray(product.platforms),
           polyCount: product.polyCount,
           rigType: product.rigType,
           blenderVersion: product.blenderVersion,

@@ -13,7 +13,7 @@ export const CATEGORIES: CategoryDef[] = [
     label: "Web Templates",
     short: "Web",
     icon: "🌐",
-    blurb: "Landing pages, dashboards & full sites",
+    blurb: "Dashboards, landing pages & full sites",
     gradient: "from-violet-500 to-fuchsia-500",
   },
   {
@@ -21,7 +21,7 @@ export const CATEGORIES: CategoryDef[] = [
     label: "App Templates",
     short: "App",
     icon: "📱",
-    blurb: "Mobile UI kits & app screen packs",
+    blurb: "Flutter & React mobile app kits",
     gradient: "from-cyan-500 to-blue-500",
   },
   {
@@ -40,30 +40,6 @@ export const CATEGORIES: CategoryDef[] = [
     blurb: "Rigged & animated Blender characters",
     gradient: "from-orange-500 to-amber-500",
   },
-  {
-    slug: "3d-model",
-    label: "3D Models",
-    short: "3D Model",
-    icon: "🧊",
-    blurb: "Props, environments & hard-surface kits",
-    gradient: "from-emerald-500 to-teal-500",
-  },
-  {
-    slug: "animation",
-    label: "Animations",
-    short: "Animation",
-    icon: "🎬",
-    blurb: "Motion packs, loops & Lottie files",
-    gradient: "from-indigo-500 to-violet-500",
-  },
-  {
-    slug: "illustration",
-    label: "Illustrations",
-    short: "Illustration",
-    icon: "✍️",
-    blurb: "Character art & illustration systems",
-    gradient: "from-amber-500 to-pink-500",
-  },
 ];
 
 export function categoryLabel(slug: string) {
@@ -72,6 +48,25 @@ export function categoryLabel(slug: string) {
 
 export function categoryDef(slug: string) {
   return CATEGORIES.find((c) => c.slug === slug);
+}
+
+/** Downloadable code packages a product can ship as. */
+export type PlatformDef = {
+  slug: string;
+  label: string;
+  icon: string;
+  hint: string;
+};
+
+export const PLATFORMS: PlatformDef[] = [
+  { slug: "nextjs", label: "Next.js", icon: "▲", hint: "App Router · TypeScript · Tailwind" },
+  { slug: "react", label: "React", icon: "⚛", hint: "Vite · TypeScript SPA" },
+  { slug: "flutter", label: "Flutter", icon: "🐦", hint: "Material 3 · iOS & Android" },
+  { slug: "blender", label: "Blender", icon: "🔶", hint: "Procedural .py builder + guide" },
+];
+
+export function platformDef(slug: string) {
+  return PLATFORMS.find((p) => p.slug === slug);
 }
 
 export const REQUEST_STATUSES = [

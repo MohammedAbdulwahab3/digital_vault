@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { Footer } from "@/components/footer";
 import { Reveal, RatingStars, FormatTag } from "@/components/ui";
 import { ProductCard, type ProductCardData } from "@/components/product-card";
+import { ProductShowcase } from "@/components/showcase";
 import { ProductActions } from "./product-actions";
 import { ReviewSection } from "./review-section";
 import { formatPrice, parseJsonArray, formatDate } from "@/lib/utils";
-import { categoryDef, categoryLabel } from "@/lib/catalog";
+import { categoryDef, categoryLabel, platformDef } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +55,7 @@ export default async function ProductDetailPage({
 
   const formats = parseJsonArray(product.formats);
   const features = parseJsonArray(product.features);
+  const platforms = parseJsonArray(product.platforms);
   const isBlender = product.category === "blender-3d" || product.category === "3d-model";
   const cat = categoryDef(product.category);
   const discount = product.oldPrice
@@ -98,42 +99,18 @@ export default async function ProductDetailPage({
         </nav>
 
         <div className="relative grid gap-12 lg:grid-cols-[1.15fr_1fr]">
-          {/* ── Visual ── */}
+          {/* ── Interactive showcase ── */}
           <Reveal>
-            <div className="gradient-ring group relative overflow-hidden rounded-3xl">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={860}
-                height={645}
-                priority
-                className="w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-
-              {isBlender && (
-                <>
-                  <span className="absolute left-4 top-4 rounded-full border border-orange-400/40 bg-ink/80 px-3 py-1.5 text-xs font-bold text-orange-300 backdrop-blur">
-                    🔶 Blender {product.blenderVersion ?? "3.0+"}
-                  </span>
-                  <div className="cube-stage absolute bottom-6 right-6 hidden sm:block">
-                    <div className="cube">
-                      <div className="cube-face front">3D</div>
-                      <div className="cube-face back">.blend</div>
-                      <div className="cube-face right">FBX</div>
-                      <div className="cube-face left">OBJ</div>
-                      <div className="cube-face top">glTF</div>
-                      <div className="cube-face bottom">PBR</div>
-                    </div>
-                  </div>
-                </>
-              )}
-              {product.badge && !isBlender && (
-                <span className="absolute left-4 top-4 rounded-full bg-gradient-brand px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-                  {product.badge}
-                </span>
-              )}
-            </div>
+            <ProductShowcase
+              product={{
+                slug: product.slug,
+                name: product.name,
+                category: product.category,
+                image: product.image,
+                polyCount: product.polyCount,
+                rigType: product.rigType,
+              }}
+            />
 
             {/* Feature list */}
             {features.length > 0 && (
@@ -176,8 +153,35 @@ export default async function ProductDetailPage({
 
             <p className="mt-5 leading-relaxed text-fog-2">{product.description}</p>
 
-            {formats.length > 0 && (
+            {platforms.length > 0 && (
               <div className="mt-6">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-fog-2">
+                  Ready-to-run code packages
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {platforms.map((slug) => {
+                    const platform = platformDef(slug);
+                    if (!platform) return null;
+                    return (
+                      <span
+                        key={slug}
+                        title={platform.hint}
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-white/12 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold"
+                      >
+                        <span className="text-purple-brand">{platform.icon}</span>
+                        {platform.label}
+                        <span className="hidden text-[10px] font-normal text-fog-2 sm:inline">
+                          · {platform.hint}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {formats.length > 0 && (
+              <div className="mt-5">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-fog-2">
                   File formats
                 </p>

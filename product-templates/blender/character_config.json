@@ -1,0 +1,12 @@
+{
+  "name": "__PRODUCT_NAME__",
+  "body_color": "__BODY_COLOR__",
+  "accent_color": "__PRIMARY__",
+  "eye_color": "__ACCENT__",
+  "proportions": {
+    "height": 1.8,
+    "head_scale": 1.0,
+    "shoulder_width": 0.62
+  },
+  "accessory": "__ACCESSORY__"
+}

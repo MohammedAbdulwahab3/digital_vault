@@ -19,8 +19,8 @@ const FEATURES = [
 ];
 
 const MARQUEE_ITEMS = [
-  ".blend", "Figma", ".fbx", "React", ".gltf", "Tailwind", "Lottie",
-  "4K PBR", "Rigged", ".obj", "Storybook", "Rive", "SVG", "Design Tokens",
+  "Next.js", ".blend", "Figma", "Flutter", ".fbx", "React", ".gltf",
+  "Tailwind", "Dart", "4K PBR", "Rigged", "TypeScript", "Material 3", "Design Tokens",
 ];
 
 export default async function HomePage() {

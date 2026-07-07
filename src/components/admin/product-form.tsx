@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/components/store-provider";
 import { Spinner } from "@/components/ui";
-import { CATEGORIES, PRODUCT_BADGES } from "@/lib/catalog";
+import { CATEGORIES, PRODUCT_BADGES, PLATFORMS } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 const PRESET_IMAGES = [
@@ -13,9 +13,6 @@ const PRESET_IMAGES = [
   "/images/product-app-design.png",
   "/images/product-ui-kit.png",
   "/images/product-blender-character.png",
-  "/images/product-3d-model.png",
-  "/images/product-animation.png",
-  "/images/product-2d-character.png",
   "/images/hero-banner.png",
 ];
 
@@ -32,6 +29,7 @@ export type ProductFormValues = {
   formats: string[];
   features: string[];
   tags: string[];
+  platforms: string[];
   polyCount: string | null;
   rigType: string | null;
   blenderVersion: string | null;
@@ -53,6 +51,7 @@ const EMPTY: ProductFormValues = {
   formats: [],
   features: [],
   tags: [],
+  platforms: ["nextjs", "react"],
   polyCount: null,
   rigType: null,
   blenderVersion: null,
@@ -198,6 +197,42 @@ export function ProductForm({ initial }: { initial?: ProductFormValues }) {
             rows={5}
             className="field resize-none"
           />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">
+            Downloadable code packages{" "}
+            <span className="font-normal text-fog-2">(what buyers can download)</span>
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {PLATFORMS.map((platform) => {
+              const selected = values.platforms.includes(platform.slug);
+              return (
+                <button
+                  key={platform.slug}
+                  type="button"
+                  onClick={() =>
+                    set(
+                      "platforms",
+                      selected
+                        ? values.platforms.filter((p) => p !== platform.slug)
+                        : [...values.platforms, platform.slug]
+                    )
+                  }
+                  title={platform.hint}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all",
+                    selected
+                      ? "border-purple-brand/60 bg-purple-brand/15 text-fog"
+                      : "border-white/10 text-fog-2 hover:border-white/25"
+                  )}
+                >
+                  <span>{platform.icon}</span> {platform.label}
+                  {selected && <span className="text-purple-brand">✓</span>}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <ListEditor

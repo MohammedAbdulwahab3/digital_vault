@@ -58,6 +58,16 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-60" />
 
+          {/* Interactive-preview hint */}
+          <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="flex items-center gap-2 rounded-full bg-ink/80 py-2 pl-2.5 pr-4 text-xs font-bold backdrop-blur">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-brand text-[9px] text-white">
+                ▶
+              </span>
+              {product.category === "blender-3d" ? "3D preview" : "Live preview"}
+            </span>
+          </span>
+
           {product.badge && (
             <span
               className={cn(

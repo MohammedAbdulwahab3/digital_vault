@@ -44,6 +44,8 @@ model Product {
   formats         String   @default("[]")
   features        String   @default("[]")
   tags            String   @default("[]")
+  // Downloadable code packages: subset of nextjs|react|flutter|blender
+  platforms       String   @default("[]")
   // Blender / 3D specifics
   polyCount       String?
   rigType         String?

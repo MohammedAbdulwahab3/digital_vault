@@ -13,6 +13,10 @@ export const productSchema = z.object({
   formats: z.array(z.string().max(20)).max(10).default([]),
   features: z.array(z.string().max(120)).max(12).default([]),
   tags: z.array(z.string().max(30)).max(10).default([]),
+  platforms: z
+    .array(z.enum(["nextjs", "react", "flutter", "blender"]))
+    .max(4)
+    .default([]),
   polyCount: z.string().max(30).nullable().optional(),
   rigType: z.string().max(50).nullable().optional(),
   blenderVersion: z.string().max(20).nullable().optional(),
@@ -34,5 +38,6 @@ export function toProductData(data: z.infer<typeof productSchema>) {
     formats: JSON.stringify(data.formats),
     features: JSON.stringify(data.features),
     tags: JSON.stringify(data.tags),
+    platforms: JSON.stringify(data.platforms),
   };
 }

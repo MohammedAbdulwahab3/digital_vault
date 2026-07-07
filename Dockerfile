@@ -29,6 +29,8 @@ RUN addgroup -S app && adduser -S app -G app && mkdir -p /app/data && chown app:
 COPY --from=builder --chown=app:app /app/.next/standalone ./
 COPY --from=builder --chown=app:app /app/.next/static ./.next/static
 COPY --from=builder --chown=app:app /app/public ./public
+# Real product code packages served by the download endpoint
+COPY --from=builder --chown=app:app /app/product-templates ./product-templates
 # Prisma schema + seed for first-boot setup
 COPY --from=builder --chown=app:app /app/prisma ./prisma
 COPY --from=builder --chown=app:app /app/node_modules/prisma ./node_modules/prisma

@@ -312,111 +312,61 @@ const products = [
     fileSize: "340 MB",
     salesCount: 954,
   },
-  // ─── 3D MODELS ───────────────────────────────────────────────────
+  // ─── MORE TEMPLATES ──────────────────────────────────────────────
   {
-    slug: "neo-city-props-kit",
-    name: "Neo City Props Kit",
-    category: "3d-model",
-    price: 6400,
-    oldPrice: 8400,
-    badge: "Staff Pick",
-    image: "/images/product-3d-model.png",
-    description:
-      "120+ modular cyberpunk city props: signage, kiosks, vehicles and street furniture.",
-    longDescription:
-      "Build dense cyberpunk streets in minutes. 120+ modular props — holographic signage, vendor kiosks, hover vehicles, cabling, vents and street furniture — all on a shared trim-sheet workflow for consistent texel density. Includes a demo street scene and an asset-browser catalog file for Blender.",
-    formats: j(["blend", "fbx", "gltf"]),
-    features: j([
-      "120+ modular props",
-      "Trim-sheet texture workflow",
-      "Demo street scene",
-      "Blender asset browser catalog",
-    ]),
-    tags: j(["props", "environment", "cyberpunk"]),
-    polyCount: "800–9K per prop",
-    rigType: null,
-    blenderVersion: "3.2+",
-    renderer: "Cycles / EEVEE",
-    fileSize: "3.4 GB",
-    salesCount: 351,
-  },
-  {
-    slug: "isometric-room-builder",
-    name: "Isometric Room Builder",
-    category: "3d-model",
-    price: 3900,
-    oldPrice: null,
-    badge: null,
-    image: "/images/product-3d-model.png",
-    description:
-      "Snap-together isometric room kit with 200 furniture pieces and 8 styled room presets.",
-    longDescription:
-      "Create the isometric room renders you see all over dribbble. 200 furniture and decor pieces that snap to a grid, 8 fully styled room presets (studio, loft, gaming den, plant room…), plus a one-click camera and lighting rig tuned for that soft, toy-like look.",
-    formats: j(["blend", "gltf"]),
-    features: j([
-      "200 snap-to-grid pieces",
-      "8 styled room presets",
-      "Preset camera + lighting rig",
-      "Toy-look material library",
-    ]),
-    tags: j(["isometric", "interior", "stylized"]),
-    polyCount: "500–4K per piece",
-    rigType: null,
-    blenderVersion: "3.0+",
-    renderer: "EEVEE",
-    fileSize: "1.8 GB",
-    salesCount: 508,
-  },
-  // ─── ANIMATIONS ──────────────────────────────────────────────────
-  {
-    slug: "motion-flow-pack",
-    name: "Motion Flow Pack",
-    category: "animation",
-    price: 4400,
-    oldPrice: 6400,
-    badge: "Popular",
-    image: "/images/product-animation.png",
-    description:
-      "150 UI micro-interactions and hero animations as Lottie, Rive and After Effects files.",
-    longDescription:
-      "150 production-ready motion assets: button and toggle micro-interactions, loaders, success/error states, onboarding hero animations and empty-state loops. Every asset ships as Lottie JSON, Rive and the original After Effects project, with a web preview gallery to browse the whole pack.",
-    formats: j(["lottie", "rive", "aep", "json"]),
-    features: j([
-      "150 motion assets",
-      "Lottie + Rive + AE sources",
-      "Web preview gallery",
-      "Optimized under 40KB each",
-    ]),
-    tags: j(["motion", "lottie", "micro-interaction"]),
-    fileSize: "420 MB",
-    featured: true,
-    salesCount: 823,
-  },
-  // ─── ILLUSTRATIONS ───────────────────────────────────────────────
-  {
-    slug: "pixel-folk-illustration-system",
-    name: "Pixel Folk Illustration System",
-    category: "illustration",
-    price: 3400,
-    oldPrice: 4900,
+    slug: "vertex-commerce-kit",
+    name: "Vertex Commerce Kit",
+    category: "web",
+    price: 5400,
+    oldPrice: 6900,
     badge: "New",
-    image: "/images/product-2d-character.png",
+    image: "/images/product-web-design.png",
     description:
-      "Mix-and-match character illustration system: 40 characters, 120 poses, 300 props.",
+      "Full e-commerce storefront template: product grid, cart drawer, checkout flow and order pages.",
     longDescription:
-      "Pixel Folk is a modular illustration system for product teams. 40 diverse base characters, 120 poses, 300 props and 20 scene backgrounds — all built from shared components so every combination stays on-style. Recolor the whole system from a single palette panel. SVG and Figma sources included.",
-    formats: j(["figma", "svg", "png"]),
+      "Vertex is a complete storefront starter for digital and physical commerce. Ships with a filterable product grid, animated cart drawer, multi-step checkout, order confirmation and account pages — all wired to a clean data layer you can point at any backend. Includes dark and light themes and a token-driven brand system you can recolor in minutes.",
+    formats: j(["figma", "nextjs", "react", "tailwind"]),
     features: j([
-      "40 characters × 120 poses",
-      "300 props, 20 scenes",
-      "One-palette recoloring",
-      "SVG + Figma components",
+      "Storefront + checkout flow",
+      "Animated cart drawer",
+      "Dark & light themes",
+      "Token-driven brand system",
+      "Next.js + React source",
     ]),
-    tags: j(["illustration", "characters", "svg"]),
-    fileSize: "260 MB",
-    salesCount: 217,
+    tags: j(["ecommerce", "storefront", "shop"]),
+    fileSize: "168 MB",
+    salesCount: 194,
+  },
+  {
+    slug: "taskly-productivity-app",
+    name: "Taskly Productivity App",
+    category: "app",
+    price: 3200,
+    oldPrice: 4400,
+    badge: null,
+    image: "/images/product-app-design.png",
+    description:
+      "Task & habit tracking app UI with boards, focus timer, streaks and calendar screens.",
+    longDescription:
+      "Taskly covers the core loops of a modern productivity app: project boards, a pomodoro-style focus timer, habit streaks with weekly heatmaps, calendar planning and a review flow. 34 screens with a calm, high-contrast visual language, plus a complete Flutter implementation with Material 3 theming.",
+    formats: j(["figma", "flutter"]),
+    features: j([
+      "34 screens",
+      "Focus timer & streaks module",
+      "Weekly heatmap components",
+      "Flutter Material 3 source",
+    ]),
+    tags: j(["productivity", "tasks", "habits"]),
+    fileSize: "92 MB",
+    salesCount: 158,
   },
 ];
+
+/** Downloadable code packages by category. */
+const platformsFor = (category: string) =>
+  category === "blender-3d"
+    ? ["blender"]
+    : ["nextjs", "react", "flutter"];
 
 const reviewSeeds: Record<string, { user: number; rating: number; title: string; body: string }[]> = {
   "nexa-pro-dashboard": [
@@ -445,11 +395,11 @@ const reviewSeeds: Record<string, { user: number; rating: number; title: string;
     { user: 4, rating: 5, title: "Dropped into Godot in minutes", body: "The Godot import guide is a lifesaver. Animations retargeted cleanly and it runs great on mobile." },
     { user: 1, rating: 4, title: "Great starter character", body: "Clean topology, sensible rig. Wish there were a few more facial options but excellent value." },
   ],
-  "motion-flow-pack": [
-    { user: 0, rating: 5, title: "Lottie files are tiny", body: "Every asset really is under 40KB. Our app bundle barely noticed 20 new animations." },
+  "vertex-commerce-kit": [
+    { user: 0, rating: 5, title: "Checkout flow saved us weeks", body: "The multi-step checkout is production quality. We swapped in our API and shipped in days." },
   ],
-  "neo-city-props-kit": [
-    { user: 3, rating: 5, title: "Trim sheets done right", body: "Consistent texel density across 120 props. Built an entire alley scene in one evening." },
+  "taskly-productivity-app": [
+    { user: 3, rating: 5, title: "The Flutter source is clean", body: "Proper Material 3 theming, sensible state management, no spaghetti. Best Flutter kit I've bought." },
   ],
 };
 
@@ -498,7 +448,9 @@ async function main() {
   // ── Products ──
   const created: Record<string, { id: string; price: number; name: string }> = {};
   for (const p of products) {
-    const row = await db.product.create({ data: p });
+    const row = await db.product.create({
+      data: { ...p, platforms: j(platformsFor(p.category)) },
+    });
     created[p.slug] = { id: row.id, price: row.price, name: row.name };
   }
   console.log(`  ✓ ${products.length} products`);
@@ -532,7 +484,7 @@ async function main() {
   const orderSpecs = [
     { slugs: ["cyber-ronin-character", "quantum-ui-kit"], daysAgo: 21 },
     { slugs: ["nexa-pro-dashboard"], daysAgo: 9 },
-    { slugs: ["motion-flow-pack", "low-poly-adventure-hero"], daysAgo: 2 },
+    { slugs: ["sync-finance-app", "low-poly-adventure-hero"], daysAgo: 2 },
   ];
   let orderIdx = 0;
   for (const spec of orderSpecs) {
@@ -562,8 +514,8 @@ async function main() {
     { user: 2, slug: "sync-finance-app", daysAgo: 19 },
     { user: 3, slug: "quantum-ui-kit", daysAgo: 14 },
     { user: 4, slug: "luna-mage-fantasy", daysAgo: 11 },
-    { user: 1, slug: "motion-flow-pack", daysAgo: 6 },
-    { user: 3, slug: "neo-city-props-kit", daysAgo: 4 },
+    { user: 1, slug: "vertex-commerce-kit", daysAgo: 6 },
+    { user: 3, slug: "taskly-productivity-app", daysAgo: 4 },
     { user: 0, slug: "aurora-landing-page", daysAgo: 1 },
   ];
   for (const spec of extraSpecs) {
@@ -635,10 +587,10 @@ async function main() {
   await db.customRequest.create({
     data: {
       userId: reviewers[2].id,
-      title: "Explainer animation for onboarding",
-      category: "animation",
+      title: "Flutter app template for a booking startup",
+      category: "app",
       description:
-        "60-second product explainer in flat illustration style, needs Lottie export for in-app playback plus 1080p video for socials.",
+        "We need a white-label booking app template in Flutter: onboarding, service browsing, slot picker, payments screen and booking history. Material 3, themable from a single config file.",
       budget: 80000,
       status: "PENDING",
       createdAt: new Date(Date.now() - 1 * 86400000),
