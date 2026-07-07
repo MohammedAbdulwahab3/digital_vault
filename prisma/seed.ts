@@ -584,6 +584,26 @@ async function main() {
     ],
   });
 
+  // Product-linked customization request
+  const req3 = await db.customRequest.create({
+    data: {
+      userId: demoUser.id,
+      productId: created["nexa-pro-dashboard"].id,
+      title: "Customize Nexa Pro: RTL support + our brand theme",
+      category: "web",
+      description:
+        "We bought Nexa Pro Dashboard and love it. We need two customizations: 1) full RTL (Arabic) layout support across all 12 pages, and 2) a brand theme swap to our palette (forest green #166534 primary) delivered as a second token set we can toggle.",
+      budget: 60000,
+      status: "REVIEWING",
+      createdAt: new Date(Date.now() - 2 * 86400000),
+    },
+  });
+  await db.requestMessage.createMany({
+    data: [
+      { requestId: req3.id, senderId: admin.id, body: "Thanks for the details! RTL across all 12 pages is very doable since Nexa uses logical CSS properties in most components. I'll audit the chart components and send a quote by tomorrow.", createdAt: new Date(Date.now() - 1 * 86400000) },
+    ],
+  });
+
   await db.customRequest.create({
     data: {
       userId: reviewers[2].id,
@@ -596,7 +616,7 @@ async function main() {
       createdAt: new Date(Date.now() - 1 * 86400000),
     },
   });
-  console.log("  ✓ 3 custom requests with message threads");
+  console.log("  ✓ 4 custom requests with message threads");
 
   // ── Coupons ──
   await db.coupon.createMany({

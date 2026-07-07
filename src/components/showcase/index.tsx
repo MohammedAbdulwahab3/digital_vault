@@ -63,9 +63,9 @@ export function ProductShowcase({ product }: { product: ShowcaseProduct }) {
           rigType={product.rigType}
         />
       ) : product.category === "app" ? (
-        <AppShowcase name={product.name} />
+        <AppShowcase slug={product.slug} name={product.name} />
       ) : (
-        <DashboardShowcase name={product.name} />
+        <DashboardShowcase slug={product.slug} name={product.name} />
       )}
     </div>
   );

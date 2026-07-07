@@ -78,6 +78,13 @@ export default async function OrdersPage() {
                       </div>
                       {order.status === "PAID" ? (
                         <div className="flex shrink-0 flex-wrap items-center gap-2">
+                          <Link
+                            href={`/account/requests/new?product=${item.product.slug}`}
+                            title="Request extra features or changes to this product"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-pink-brand/40 bg-pink-brand/10 px-3.5 py-1.5 text-xs font-semibold text-pink-300 transition-all hover:border-transparent hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white"
+                          >
+                            🔧 Customize
+                          </Link>
                           {platforms.map((slug) => {
                             const platform = platformDef(slug);
                             if (!platform) return null;

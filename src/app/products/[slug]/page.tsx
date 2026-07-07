@@ -265,6 +265,27 @@ export default async function ProductDetailPage({
                 <span>🔄 Lifetime updates</span>
               </div>
             </div>
+
+            {/* Customization CTA */}
+            <Link
+              href={`/account/requests/new?product=${product.slug}`}
+              className="glass group mt-4 flex items-center gap-4 rounded-2xl p-4 transition hover:border-pink-brand/40"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 text-lg shadow-lg transition-transform group-hover:scale-110">
+                🔧
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-bold">
+                  Need extra features or changes?
+                </span>
+                <span className="block text-xs text-fog-2">
+                  Request customization — new screens, your branding, integrations. Quoted within 24h.
+                </span>
+              </span>
+              <span className="shrink-0 text-sm font-semibold text-pink-brand transition group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
           </Reveal>
         </div>
 

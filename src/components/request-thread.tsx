@@ -27,6 +27,7 @@ export type ThreadRequest = {
   quoteNote: string | null;
   createdAt: string;
   user: { id: string; name: string; email: string };
+  product: { slug: string; name: string; image: string } | null;
 };
 
 export function RequestThread({
@@ -123,6 +124,28 @@ export function RequestThread({
             <StatusBadge status={request.status} />
           </div>
         </div>
+
+        {/* Linked product */}
+        {request.product && (
+          <a
+            href={`/products/${request.product.slug}`}
+            className="glass mb-4 flex items-center gap-3 rounded-2xl p-3 transition hover:border-purple-brand/40"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={request.product.image}
+              alt=""
+              className="h-12 w-12 rounded-xl object-cover"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-purple-brand">
+                🔧 Customization of purchased product
+              </p>
+              <p className="truncate text-sm font-bold">{request.product.name}</p>
+            </div>
+            <span className="shrink-0 text-xs text-fog-2">View product →</span>
+          </a>
+        )}
 
         {/* Brief */}
         <div className="glass mb-6 rounded-2xl p-5">

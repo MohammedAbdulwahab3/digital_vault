@@ -11,6 +11,7 @@ export default async function AdminRequestsPage() {
   const requests = await db.customRequest.findMany({
     include: {
       user: { select: { name: true, email: true } },
+      product: { select: { name: true } },
       _count: { select: { messages: true } },
     },
     orderBy: { updatedAt: "desc" },
@@ -42,7 +43,11 @@ export default async function AdminRequestsPage() {
                   {req.title}
                 </p>
                 <p className="mt-1 text-xs text-fog-2">
-                  {req.user.name} · {req._count.messages} messages · updated {formatDate(req.updatedAt)}
+                  {req.user.name}
+                  {req.product && (
+                    <> · <span className="text-pink-300">🔧 {req.product.name}</span></>
+                  )}{" "}
+                  · {req._count.messages} messages · updated {formatDate(req.updatedAt)}
                   {req.budget != null && <> · budget {formatPrice(req.budget)}</>}
                 </p>
               </div>

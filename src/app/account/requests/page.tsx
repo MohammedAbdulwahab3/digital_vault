@@ -15,7 +15,10 @@ export default async function MyRequestsPage() {
 
   const requests = await db.customRequest.findMany({
     where: { userId: user.id },
-    include: { _count: { select: { messages: true } } },
+    include: {
+      _count: { select: { messages: true } },
+      product: { select: { name: true } },
+    },
     orderBy: { updatedAt: "desc" },
   });
 
@@ -57,8 +60,12 @@ export default async function MyRequestsPage() {
                     {req.title}
                   </p>
                   <p className="mt-1 text-xs text-fog-2">
-                    {cat?.label ?? req.category} · {req._count.messages} messages ·
-                    updated {formatDate(req.updatedAt)}
+                    {req.product ? (
+                      <span className="text-pink-300">🔧 {req.product.name}</span>
+                    ) : (
+                      cat?.label ?? req.category
+                    )}{" "}
+                    · {req._count.messages} messages · updated {formatDate(req.updatedAt)}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1.5">

@@ -19,6 +19,7 @@ export default async function AdminRequestPage({
     where: { id },
     include: {
       user: { select: { id: true, name: true, email: true } },
+      product: { select: { slug: true, name: true, image: true } },
       messages: {
         include: { sender: { select: { id: true, name: true, role: true } } },
         orderBy: { createdAt: "asc" },
@@ -48,6 +49,7 @@ export default async function AdminRequestPage({
           quoteNote: request.quoteNote,
           createdAt: request.createdAt.toISOString(),
           user: request.user,
+          product: request.product,
         }}
         messages={request.messages.map((m) => ({
           id: m.id,
