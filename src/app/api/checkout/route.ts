@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { handle, json } from "@/lib/api";
 import { orderNumber } from "@/lib/utils";
 import { stripeEnabled, getStripe, appUrl } from "@/lib/stripe";
+import { chapaEnabled, chapaInitialize } from "@/lib/chapa";
 import { applyCoupon, CouponError } from "@/lib/orders";
 
 const schema = z.object({
@@ -60,7 +61,7 @@ export const POST = handle(async (req: Request) => {
       discount,
       couponCode,
       total,
-      paymentMethod: stripeEnabled() ? "stripe" : "demo",
+      paymentMethod: chapaEnabled() ? "chapa" : stripeEnabled() ? "stripe" : "demo",
       items: {
         create: purchasable.map((c) => ({
           productId: c.productId,
@@ -76,6 +77,23 @@ export const POST = handle(async (req: Request) => {
       where: { code: couponCode },
       data: { uses: { increment: 1 } },
     });
+  }
+
+  if (chapaEnabled()) {
+    // Ethiopian gateway: Telebirr, CBE Birr, M-Pesa and cards, charged in ETB
+    const { checkoutUrl } = await chapaInitialize({
+      amountUsdCents: total,
+      email: user.email,
+      firstName: user.name.split(" ")[0] ?? "Customer",
+      txRef: order.id,
+      returnUrl: `${appUrl()}/checkout/success?order=${order.id}`,
+      title: "PixelVault",
+    });
+    await db.order.update({
+      where: { id: order.id },
+      data: { paymentRef: order.id },
+    });
+    return json({ url: checkoutUrl, orderId: order.id });
   }
 
   if (stripeEnabled()) {

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-import { formatPrice, formatDate, parseJsonArray } from "@/lib/utils";
+import { formatMoney, formatDate, parseJsonArray } from "@/lib/utils";
+import { getServerDict } from "@/lib/locale-server";
 import { StatusBadge } from "@/components/ui";
 import { platformDef } from "@/lib/catalog";
 
@@ -13,6 +14,7 @@ export const metadata = { title: "Orders & Downloads" };
 export default async function OrdersPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/account/orders");
+  const { locale, t } = await getServerDict();
 
   const orders = await db.order.findMany({
     where: { userId: user.id },
@@ -23,17 +25,17 @@ export default async function OrdersPage() {
   return (
     <div>
       <h1 className="font-display text-3xl font-bold tracking-tight">
-        Orders & <span className="text-gradient">Downloads</span>
+        {t.account.ordersTitlePre}<span className="text-gradient">{t.account.ordersTitleSpan}</span>
       </h1>
       <p className="mt-2 text-fog-2">
-        Every purchase unlocks instant downloads with a commercial license.
+        {t.account.ordersSub}
       </p>
 
       {orders.length === 0 ? (
         <div className="glass mt-8 rounded-2xl py-16 text-center">
           <span className="text-4xl opacity-40">📦</span>
-          <p className="mt-4 text-fog-2">You haven't ordered anything yet.</p>
-          <Link href="/products" className="btn-primary mt-5 inline-flex">Browse products</Link>
+          <p className="mt-4 text-fog-2">{t.account.noOrdersYet}</p>
+          <Link href="/products" className="btn-primary mt-5 inline-flex">{t.cart.browse}</Link>
         </div>
       ) : (
         <div className="mt-8 flex flex-col gap-5">
@@ -45,8 +47,8 @@ export default async function OrdersPage() {
                   <StatusBadge status={order.status} />
                 </div>
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="text-fog-2">{formatDate(order.createdAt)}</span>
-                  <span className="font-display font-bold">{formatPrice(order.total)}</span>
+                  <span className="text-fog-2">{formatDate(order.createdAt, locale)}</span>
+                  <span className="font-display font-bold">{formatMoney(order.total, locale)}</span>
                 </div>
               </div>
               <ul className="divide-y divide-white/5">
@@ -72,8 +74,8 @@ export default async function OrdersPage() {
                           {item.name}
                         </Link>
                         <p className="text-xs text-fog-2">
-                          {formatPrice(item.price)} · {item.product.fileSize}
-                          {item.downloads > 0 && ` · downloaded ${item.downloads}×`}
+                          {formatMoney(item.price, locale)} · {item.product.fileSize}
+                          {item.downloads > 0 && ` · ${t.account.downloaded} ${item.downloads}×`}
                         </p>
                       </div>
                       {order.status === "PAID" ? (
@@ -103,7 +105,7 @@ export default async function OrdersPage() {
                           })}
                         </div>
                       ) : (
-                        <span className="text-xs text-fog-2">Awaiting payment</span>
+                        <span className="text-xs text-fog-2">{t.account.awaitingPayment}</span>
                       )}
                     </li>
                   );

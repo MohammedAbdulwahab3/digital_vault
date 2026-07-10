@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform, animate, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useLang } from "@/components/language-provider";
 
 function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -29,6 +30,7 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 }
 
 export function Hero({ productCount }: { productCount: number }) {
+  const { t } = useLang();
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const sx = useSpring(mx, { damping: 25, stiffness: 120 });
@@ -70,7 +72,7 @@ export function Hero({ productCount }: { productCount: number }) {
             transition={{ duration: 0.6 }}
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-brand/30 bg-violet-brand/15 px-4 py-1.5 text-sm font-medium text-purple-brand"
           >
-            ✨ #1 Digital Design Marketplace
+            {t.hero.badge}
           </motion.div>
 
           <motion.h1
@@ -79,8 +81,8 @@ export function Hero({ productCount }: { productCount: number }) {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl xl:text-7xl"
           >
-            Discover <span className="text-gradient">Premium Digital</span>{" "}
-            Templates &amp; Characters
+            {t.hero.titlePre}<span className="text-gradient">{t.hero.titleSpan}</span>
+            {t.hero.titlePost}
           </motion.h1>
 
           <motion.p
@@ -89,10 +91,9 @@ export function Hero({ productCount }: { productCount: number }) {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-fog-2"
           >
-            Handcrafted web templates, app designs, Blender 3D characters
-            &amp; UI kits from world-class creators — or{" "}
+            {t.hero.subtitle}
             <Link href="/requests" className="text-purple-brand underline-offset-4 hover:underline">
-              commission something custom
+              {t.hero.subtitleLink}
             </Link>
             .
           </motion.p>
@@ -104,10 +105,10 @@ export function Hero({ productCount }: { productCount: number }) {
             className="mt-8 flex flex-wrap gap-4"
           >
             <Link href="/products" className="btn-primary !px-8 !py-3 !text-base">
-              Explore Products
+              {t.hero.exploreBtn}
             </Link>
             <Link href="/requests" className="btn-outline !px-8 !py-3 !text-base">
-              Request Custom Work
+              {t.hero.requestBtn}
             </Link>
           </motion.div>
 
@@ -121,19 +122,19 @@ export function Hero({ productCount }: { productCount: number }) {
               <p className="font-display text-3xl font-bold text-gradient">
                 <Counter to={productCount} suffix="+" />
               </p>
-              <p className="mt-1 text-sm text-fog-2">Digital Products</p>
+              <p className="mt-1 text-sm text-fog-2">{t.hero.statProducts}</p>
             </div>
             <div>
               <p className="font-display text-3xl font-bold text-gradient">
                 <Counter to={10} suffix="K" />
               </p>
-              <p className="mt-1 text-sm text-fog-2">Happy Creators</p>
+              <p className="mt-1 text-sm text-fog-2">{t.hero.statCreators}</p>
             </div>
             <div>
               <p className="font-display text-3xl font-bold text-gradient">
                 <Counter to={99} suffix=".9%" />
               </p>
-              <p className="mt-1 text-sm text-fog-2">Satisfaction</p>
+              <p className="mt-1 text-sm text-fog-2">{t.hero.statSatisfaction}</p>
             </div>
           </motion.div>
         </div>
@@ -162,24 +163,24 @@ export function Hero({ productCount }: { productCount: number }) {
             style={{ x: cardX, y: cardY }}
             className="glass-strong absolute -left-10 top-10 animate-float rounded-2xl px-4 py-3 shadow-2xl"
           >
-            <p className="text-xs text-fog-2">Blender Character</p>
+            <p className="text-xs text-fog-2">{t.hero.chipBlender}</p>
             <p className="text-sm font-bold">
-              🧑‍🎨 Fully Rigged <span className="text-orange-400">· 52K</span>
+              🧑‍🎨 {t.hero.chipRigged} <span className="text-orange-400">· 52K</span>
             </p>
           </motion.div>
           <motion.div
             style={{ x: cardX, y: cardY }}
             className="glass-strong absolute -right-6 bottom-24 animate-float rounded-2xl px-4 py-3 shadow-2xl [animation-delay:1.6s]"
           >
-            <p className="text-xs text-fog-2">Instant Delivery</p>
-            <p className="text-sm font-bold">⚡ Download in seconds</p>
+            <p className="text-xs text-fog-2">{t.hero.chipDelivery}</p>
+            <p className="text-sm font-bold">{t.hero.chipDownload}</p>
           </motion.div>
           <motion.div
             style={{ x: cardX, y: cardY }}
             className="glass-strong absolute -bottom-6 left-16 animate-float rounded-2xl px-4 py-3 shadow-2xl [animation-delay:0.8s]"
           >
             <p className="text-sm font-bold">
-              ★★★★★ <span className="font-normal text-fog-2">4.9 avg rating</span>
+              ★★★★★ <span className="font-normal text-fog-2">{t.hero.chipRating}</span>
             </p>
           </motion.div>
         </motion.div>

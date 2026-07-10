@@ -4,16 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "./store-provider";
+import { useLang } from "./language-provider";
 import { cn } from "@/lib/utils";
-
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Explore" },
-  { href: "/requests", label: "Custom Requests" },
-];
 
 export function Navbar() {
   const { user, cart, setCartOpen, logout } = useStore();
+  const { locale, t, setLocale } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,6 +17,12 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const NAV_LINKS = [
+    { href: "/", label: t.nav.home },
+    { href: "/products", label: t.nav.explore },
+    { href: "/requests", label: t.nav.requests },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -48,6 +50,8 @@ export function Navbar() {
     e.preventDefault();
     router.push(query.trim() ? `/products?q=${encodeURIComponent(query.trim())}` : "/products");
   };
+
+  const toggleLocale = () => setLocale(locale === "en" ? "am" : "en");
 
   return (
     <nav
@@ -94,10 +98,21 @@ export function Navbar() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search designs…"
+              placeholder={t.nav.search}
               className="w-36 bg-transparent text-sm outline-none placeholder:text-fog-2/60 lg:w-44"
             />
           </form>
+
+          {/* Language switcher */}
+          <button
+            onClick={toggleLocale}
+            className="glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition hover:border-purple-brand/50"
+            aria-label="Switch language"
+            title={locale === "en" ? "ወደ አማርኛ ቀይር" : "Switch to English"}
+          >
+            <span className="text-sm">🌍</span>
+            {locale === "en" ? "አማ" : "EN"}
+          </button>
 
           <button
             onClick={() => setCartOpen(true)}
@@ -133,33 +148,33 @@ export function Navbar() {
                   </div>
                   {user.role === "ADMIN" && (
                     <Link href="/admin" className="block px-4 py-2 text-sm text-purple-brand transition hover:bg-white/5">
-                      ⚡ Admin Dashboard
+                      {t.nav.adminDashboard}
                     </Link>
                   )}
                   <Link href="/account" className="block px-4 py-2 text-sm transition hover:bg-white/5">
-                    Overview
+                    {t.nav.overview}
                   </Link>
                   <Link href="/account/orders" className="block px-4 py-2 text-sm transition hover:bg-white/5">
-                    Orders & Downloads
+                    {t.nav.ordersDownloads}
                   </Link>
                   <Link href="/account/requests" className="block px-4 py-2 text-sm transition hover:bg-white/5">
-                    My Requests
+                    {t.nav.myRequests}
                   </Link>
                   <Link href="/account/wishlist" className="block px-4 py-2 text-sm transition hover:bg-white/5">
-                    Wishlist
+                    {t.nav.wishlist}
                   </Link>
                   <button
                     onClick={logout}
                     className="block w-full px-4 py-2 text-left text-sm text-red-400 transition hover:bg-white/5"
                   >
-                    Sign out
+                    {t.nav.signOut}
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/login" className="btn-primary hidden !py-2 sm:inline-flex">
-              Sign In
+              {t.nav.signIn}
             </Link>
           )}
 
@@ -186,7 +201,7 @@ export function Navbar() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search designs…"
+              placeholder={t.nav.search}
               className="w-full bg-transparent text-sm outline-none placeholder:text-fog-2/60"
             />
           </form>
@@ -204,7 +219,7 @@ export function Navbar() {
             {!user && (
               <li>
                 <Link href="/login" className="block rounded-lg px-3 py-2 text-sm font-medium text-purple-brand">
-                  Sign In →
+                  {t.nav.signIn} →
                 </Link>
               </li>
             )}

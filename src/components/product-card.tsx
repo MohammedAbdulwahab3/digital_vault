@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "./store-provider";
+import { useLang } from "./language-provider";
 import { TiltCard, RatingStars, FormatTag } from "./ui";
-import { formatPrice, parseJsonArray, cn } from "@/lib/utils";
-import { categoryLabel } from "@/lib/catalog";
+import { formatMoney, parseJsonArray, cn } from "@/lib/utils";
 
 export type ProductCardData = {
   id: string;
@@ -36,6 +36,7 @@ const BADGE_STYLES: Record<string, string> = {
 
 export function ProductCard({ product }: { product: ProductCardData }) {
   const { addToCart, toggleWishlist, wishlist } = useStore();
+  const { locale, t } = useLang();
   const formats = parseJsonArray(product.formats);
   const wishlisted = wishlist.includes(product.id);
   const discount = product.oldPrice
@@ -64,7 +65,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-brand text-[9px] text-white">
                 ▶
               </span>
-              {product.category === "blender-3d" ? "3D preview" : "Live preview"}
+              {product.category === "blender-3d" ? t.product.threeDPreview : t.product.livePreview}
             </span>
           </span>
 
@@ -75,7 +76,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
                 BADGE_STYLES[product.badge] ?? "bg-gradient-brand"
               )}
             >
-              {product.badge}
+              {t.badges[product.badge] ?? product.badge}
             </span>
           )}
           {discount > 0 && (
@@ -118,7 +119,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         <div className="flex flex-1 flex-col gap-2 p-4">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold uppercase tracking-wider text-purple-brand">
-              {categoryLabel(product.category)}
+              {t.categories[product.category]?.short ?? product.category}
             </span>
             <span className="flex items-center gap-1 text-fog-2">
               <RatingStars rating={product.rating} />
@@ -149,10 +150,10 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 
           <div className="mt-auto flex items-center justify-between pt-2">
             <span className="font-display text-lg font-bold">
-              {formatPrice(product.price)}
+              {formatMoney(product.price, locale)}
               {product.oldPrice && (
                 <span className="ml-2 text-xs font-normal text-fog-2 line-through">
-                  {formatPrice(product.oldPrice)}
+                  {formatMoney(product.oldPrice, locale)}
                 </span>
               )}
             </span>

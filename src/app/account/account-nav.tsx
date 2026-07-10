@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-const LINKS = [
-  { href: "/account", label: "Overview", icon: "📊" },
-  { href: "/account/orders", label: "Orders & Downloads", icon: "📦" },
-  { href: "/account/requests", label: "Custom Requests", icon: "💬" },
-  { href: "/account/wishlist", label: "Wishlist", icon: "❤️" },
-];
+import { useLang } from "@/components/language-provider";
 
 export function AccountNav() {
   const pathname = usePathname();
+  const { t } = useLang();
+  const LINKS = [
+    { href: "/account", label: t.account.overview, icon: "📊" },
+    { href: "/account/orders", label: t.account.orders, icon: "📦" },
+    { href: "/account/requests", label: t.account.requests, icon: "💬" },
+    { href: "/account/wishlist", label: t.account.wishlist, icon: "❤️" },
+  ];
   return (
     <aside>
       <nav className="glass flex flex-row gap-1 overflow-x-auto rounded-2xl p-2 lg:sticky lg:top-24 lg:flex-col">

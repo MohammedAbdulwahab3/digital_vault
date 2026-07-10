@@ -4,19 +4,10 @@ import { Hero } from "@/components/home/hero";
 import { TrendingGrid } from "@/components/home/trending";
 import { Reveal, SectionHeader, RatingStars } from "@/components/ui";
 import { Footer } from "@/components/footer";
-import { CATEGORIES } from "@/lib/catalog";
+import { getServerDict } from "@/lib/locale-server";
 import type { ProductCardData } from "@/components/product-card";
 
 export const dynamic = "force-dynamic";
-
-const FEATURES = [
-  { icon: "⚡", title: "Instant Downloads", body: "Files unlock the moment payment clears. No waiting, no emails — start creating right away." },
-  { icon: "🛡️", title: "Commercial License", body: "Every product ships with a commercial license. Use it freely in client and personal projects." },
-  { icon: "🎨", title: "Curated Quality", body: "Every product is hand-reviewed by our team for premium quality and usability standards." },
-  { icon: "🔄", title: "Free Updates", body: "Lifetime updates on every purchase. Your library stays current with the latest versions." },
-  { icon: "💬", title: "Custom Requests", body: "Need something bespoke? Submit a brief, get a quote, and chat with creators right in your dashboard." },
-  { icon: "💰", title: "Money-Back Guarantee", body: "Not satisfied? Full refund within 30 days — no questions asked." },
-];
 
 const MARQUEE_ITEMS = [
   "Next.js", ".blend", "Figma", "Flutter", ".fbx", "React", ".gltf",
@@ -24,6 +15,7 @@ const MARQUEE_ITEMS = [
 ];
 
 export default async function HomePage() {
+  const { locale, t } = await getServerDict();
   const [products, productCount, testimonials] = await Promise.all([
     db.product.findMany({
       where: { published: true },
@@ -42,11 +34,11 @@ export default async function HomePage() {
   const cardData: ProductCardData[] = products.map((p) => ({
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: locale === "am" && p.nameAm ? p.nameAm : p.name,
     category: p.category,
     price: p.price,
     oldPrice: p.oldPrice,
-    description: p.description,
+    description: locale === "am" && p.descriptionAm ? p.descriptionAm : p.description,
     image: p.image,
     badge: p.badge,
     formats: p.formats,
@@ -56,6 +48,20 @@ export default async function HomePage() {
     reviewCount: p.reviewCount,
     salesCount: p.salesCount,
   }));
+
+  const categoryEntries = Object.entries(t.categories);
+  const CATEGORY_GRADIENTS: Record<string, string> = {
+    web: "from-violet-500 to-fuchsia-500",
+    app: "from-cyan-500 to-blue-500",
+    "ui-kit": "from-pink-500 to-rose-500",
+    "blender-3d": "from-orange-500 to-amber-500",
+  };
+  const CATEGORY_ICONS: Record<string, string> = {
+    web: "🌐",
+    app: "📱",
+    "ui-kit": "🎨",
+    "blender-3d": "🧑‍🎨",
+  };
 
   return (
     <>
@@ -75,21 +81,21 @@ export default async function HomePage() {
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-6 py-24" id="categories">
         <SectionHeader
-          eyebrow="Browse"
-          title={<>Find your next <span className="text-gradient">asset</span></>}
-          subtitle="Seven curated categories, one consistent quality bar."
+          eyebrow={t.home.browseEyebrow}
+          title={<>{t.home.browseTitlePre}<span className="text-gradient">{t.home.browseTitleSpan}</span></>}
+          subtitle={t.home.browseSubtitle}
         />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-          {CATEGORIES.map((cat, i) => (
-            <Reveal key={cat.slug} delay={i * 0.06}>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {categoryEntries.map(([slug, cat], i) => (
+            <Reveal key={slug} delay={i * 0.06}>
               <Link
-                href={`/products?category=${cat.slug}`}
+                href={`/products?category=${slug}`}
                 className="gradient-ring glass group flex h-full flex-col items-center gap-2 rounded-2xl px-4 py-7 text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_-12px_rgba(124,58,237,0.45)]"
               >
                 <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${cat.gradient} text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${CATEGORY_GRADIENTS[slug]} text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110`}
                 >
-                  {cat.icon}
+                  {CATEGORY_ICONS[slug]}
                 </span>
                 <span className="mt-1 text-sm font-bold leading-tight">{cat.label}</span>
                 <span className="text-[11px] leading-snug text-fog-2">{cat.blurb}</span>
@@ -103,9 +109,9 @@ export default async function HomePage() {
       <section className="border-y border-white/5 bg-ink-2/40 py-24">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeader
-            eyebrow="Marketplace"
-            title={<>Trending <span className="text-gradient">products</span></>}
-            subtitle="Curated collection of our best-selling digital designs"
+            eyebrow={t.home.trendingEyebrow}
+            title={<>{t.home.trendingTitlePre}<span className="text-gradient">{t.home.trendingTitleSpan}</span></>}
+            subtitle={t.home.trendingSubtitle}
           />
           <TrendingGrid products={cardData} />
         </div>
@@ -114,12 +120,12 @@ export default async function HomePage() {
       {/* Features */}
       <section className="mx-auto max-w-7xl px-6 py-24">
         <SectionHeader
-          eyebrow="Why PixelVault"
-          title={<>Built for <span className="text-gradient-warm">serious creators</span></>}
-          subtitle="The premium marketplace trusted by designers worldwide"
+          eyebrow={t.home.whyEyebrow}
+          title={<>{t.home.whyTitlePre}<span className="text-gradient-warm">{t.home.whyTitleSpan}</span></>}
+          subtitle={t.home.whySubtitle}
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => (
+          {t.home.features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.07}>
               <div className="gradient-ring glass group h-full rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1">
                 <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-brand text-2xl shadow-[0_8px_24px_rgba(124,58,237,0.35)] transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
@@ -138,9 +144,9 @@ export default async function HomePage() {
         <section className="border-y border-white/5 bg-ink-2/40 py-24">
           <div className="mx-auto max-w-7xl px-6">
             <SectionHeader
-              eyebrow="Reviews"
-              title={<>Loved by <span className="text-gradient">creators</span></>}
-              subtitle="Verified purchase reviews from the community"
+              eyebrow={t.home.reviewsEyebrow}
+              title={<>{t.home.reviewsTitlePre}<span className="text-gradient">{t.home.reviewsTitleSpan}</span></>}
+              subtitle={t.home.reviewsSubtitle}
             />
             <div className="grid gap-5 md:grid-cols-3">
               {testimonials.map((review, i) => (
@@ -156,7 +162,9 @@ export default async function HomePage() {
                       </span>
                       <div>
                         <p className="text-sm font-semibold">{review.user.name}</p>
-                        <p className="text-xs text-fog-2">on {review.product.name}</p>
+                        <p className="text-xs text-fog-2">
+                          {t.home.reviewOn} {review.product.name}
+                        </p>
                       </div>
                     </figcaption>
                   </figure>
@@ -172,18 +180,15 @@ export default async function HomePage() {
         <div className="orb left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 bg-violet-brand/15" />
         <Reveal className="relative mx-auto max-w-2xl px-6 text-center">
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-            Ready to create something <span className="shimmer-text">amazing?</span>
+            {t.home.ctaTitlePre}<span className="shimmer-text">{t.home.ctaTitleSpan}</span>
           </h2>
-          <p className="mt-4 text-lg text-fog-2">
-            Join 8,500+ creators. Browse the catalog or commission bespoke work
-            from our design team.
-          </p>
+          <p className="mt-4 text-lg text-fog-2">{t.home.ctaSubtitle}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/register" className="btn-primary !px-8 !py-3 !text-base">
-              Create free account
+              {t.home.ctaRegister}
             </Link>
             <Link href="/products" className="btn-outline !px-8 !py-3 !text-base">
-              Browse products
+              {t.home.ctaBrowse}
             </Link>
           </div>
         </Reveal>

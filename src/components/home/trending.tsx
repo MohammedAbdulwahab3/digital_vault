@@ -4,16 +4,22 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ProductCard, type ProductCardData } from "../product-card";
+import { useLang } from "../language-provider";
 import { CATEGORIES } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
-const FILTERS = [
-  { slug: "all", label: "All" },
-  ...CATEGORIES.map((c) => ({ slug: c.slug, label: c.short })),
-];
-
 export function TrendingGrid({ products }: { products: ProductCardData[] }) {
   const [filter, setFilter] = useState("all");
+  const { t } = useLang();
+
+  const FILTERS = [
+    { slug: "all", label: t.home.all },
+    ...CATEGORIES.map((c) => ({
+      slug: c.slug,
+      label: t.categories[c.slug]?.short ?? c.short,
+    })),
+  ];
+
   const visible =
     filter === "all"
       ? products.slice(0, 8)
@@ -56,12 +62,12 @@ export function TrendingGrid({ products }: { products: ProductCardData[] }) {
       </motion.div>
 
       {visible.length === 0 && (
-        <p className="py-16 text-center text-fog-2">No products in this category yet.</p>
+        <p className="py-16 text-center text-fog-2">{t.home.noProducts}</p>
       )}
 
       <div className="mt-12 text-center">
         <Link href="/products" className="btn-outline">
-          View the full catalog →
+          {t.home.viewCatalog}
         </Link>
       </div>
     </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Footer } from "@/components/footer";
 import { Reveal, SectionHeader } from "@/components/ui";
 import { CATEGORIES } from "@/lib/catalog";
+import { getServerDict } from "@/lib/locale-server";
 
 export const metadata = { title: "Custom Design Requests" };
 
@@ -12,7 +13,8 @@ const STEPS = [
   { icon: "🚀", title: "Receive & own it", body: "Get production-ready files with full commercial rights. Your request, your asset — exclusively." },
 ];
 
-export default function RequestsLandingPage() {
+export default async function RequestsLandingPage() {
+  const { t } = await getServerDict();
   return (
     <>
       <section className="noise relative overflow-hidden py-24">
@@ -20,23 +22,21 @@ export default function RequestsLandingPage() {
         <div className="orb -left-32 bottom-0 h-[400px] w-[400px] bg-violet-brand/15" />
         <Reveal className="relative mx-auto max-w-3xl px-6 text-center">
           <span className="mb-5 inline-block rounded-full border border-pink-brand/30 bg-pink-brand/10 px-4 py-1.5 text-sm font-medium text-pink-brand">
-            ✨ Bespoke work by the PixelVault team
+            {t.requests.landingBadge}
           </span>
           <h1 className="font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl">
-            Can't find it?{" "}
-            <span className="text-gradient-warm">Commission it.</span>
+            {t.requests.landingTitlePre}
+            <span className="text-gradient-warm">{t.requests.landingTitleSpan}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-fog-2">
-            From rigged Blender characters to full product websites — submit a
-            brief, get a quote within 24h, and collaborate with world-class
-            designers in a private thread.
+            {t.requests.landingSub}
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-4">
             <Link href="/account/requests/new" className="btn-primary !px-8 !py-3 !text-base">
-              Start a request →
+              {t.requests.startRequest}
             </Link>
             <Link href="/account/requests" className="btn-outline !px-8 !py-3 !text-base">
-              My requests
+              {t.requests.myRequests}
             </Link>
           </div>
         </Reveal>

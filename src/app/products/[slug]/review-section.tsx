@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { RatingStars, Reveal, Spinner } from "@/components/ui";
 import { useStore } from "@/components/store-provider";
+import { useLang } from "@/components/language-provider";
 import { formatDate, cn } from "@/lib/utils";
 
 type ReviewData = {
@@ -32,6 +33,7 @@ export function ReviewSection({
 }) {
   const router = useRouter();
   const { toast } = useStore();
+  const { locale, t } = useLang();
   const [showForm, setShowForm] = useState(false);
   const [rating, setRating] = useState(ownReview?.rating ?? 5);
   const [hoverRating, setHoverRating] = useState(0);
@@ -62,18 +64,18 @@ export function ReviewSection({
     <section className="relative mt-20">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h2 className="font-display text-2xl font-bold">
-          Reviews{" "}
+          {t.product.reviewsTitle}{" "}
           <span className="text-base font-normal text-fog-2">({reviews.length})</span>
         </h2>
         {canReview ? (
           <button onClick={() => setShowForm((v) => !v)} className="btn-outline !py-2 text-sm">
-            {ownReview ? "Edit your review" : "Write a review"}
+            {ownReview ? t.product.editReview : t.product.writeReview}
           </button>
         ) : isLoggedIn ? (
-          <span className="text-xs text-fog-2">Only verified buyers can review</span>
+          <span className="text-xs text-fog-2">{t.product.onlyBuyers}</span>
         ) : (
           <Link href="/login" className="text-xs text-purple-brand hover:underline">
-            Sign in to review
+            {t.product.signInReview}
           </Link>
         )}
       </div>
@@ -81,7 +83,7 @@ export function ReviewSection({
       {showForm && (
         <form onSubmit={submit} className="gradient-ring glass mb-8 max-w-2xl rounded-2xl p-6">
           <div className="mb-4 flex items-center gap-2">
-            <span className="text-sm text-fog-2">Your rating:</span>
+            <span className="text-sm text-fog-2">{t.product.yourRating}</span>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -101,14 +103,14 @@ export function ReviewSection({
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Review headline (optional)"
+            placeholder={t.product.reviewHeadline}
             maxLength={80}
             className="field mb-3"
           />
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder="Share how this product worked for your project… (min 10 characters)"
+            placeholder={t.product.reviewBody}
             required
             minLength={10}
             rows={4}
@@ -116,14 +118,14 @@ export function ReviewSection({
           />
           <button type="submit" disabled={submitting} className="btn-primary">
             {submitting && <Spinner />}
-            {ownReview ? "Update review" : "Publish review"}
+            {ownReview ? t.product.updateReview : t.product.publishReview}
           </button>
         </form>
       )}
 
       {reviews.length === 0 ? (
         <p className="glass rounded-2xl py-12 text-center text-sm text-fog-2">
-          No reviews yet — be the first to share your experience.
+          {t.product.noReviews}
         </p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
@@ -143,7 +145,7 @@ export function ReviewSection({
                     <div>
                       <p className="text-sm font-semibold">{review.userName}</p>
                       <p className="text-[11px] text-fog-2">
-                        ✓ Verified purchase · {formatDate(review.createdAt)}
+                        {t.product.verifiedPurchase} · {formatDate(review.createdAt, locale)}
                       </p>
                     </div>
                   </div>

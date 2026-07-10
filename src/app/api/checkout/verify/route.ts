@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { handle, json } from "@/lib/api";
 import { stripeEnabled, getStripe } from "@/lib/stripe";
+import { chapaEnabled, chapaVerify } from "@/lib/chapa";
 import { fulfillOrder } from "@/lib/orders";
 
 /**
@@ -22,6 +23,13 @@ export const GET = handle(async (req: Request) => {
   if (!order || order.userId !== user.id) return json({ error: "Order not found" }, 404);
 
   if (order.status === "PAID") return json({ status: "PAID" });
+
+  if (order.paymentMethod === "chapa" && chapaEnabled()) {
+    if (await chapaVerify(order.id)) {
+      await fulfillOrder(order.id, order.id);
+      return json({ status: "PAID" });
+    }
+  }
 
   if (order.paymentMethod === "stripe" && stripeEnabled() && sessionId) {
     if (order.paymentRef && order.paymentRef !== sessionId) {

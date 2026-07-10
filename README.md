@@ -41,6 +41,22 @@ per product and buyer):
 Buyers pick the platform on the Orders page; each ZIP includes a
 personalized commercial LICENSE.txt.
 
+### 🇪🇹 Ethiopian edition (አማርኛ)
+The storefront ships fully localized for Ethiopia — toggle with the 🌍 button
+in the navbar (persists in a cookie, server-rendered both ways):
+
+- **Full Amharic UI** (Noto Sans Ethiopic) across home, catalog, product
+  pages, cart, checkout, auth, orders and requests — plus Amharic product
+  names/descriptions stored per product (`nameAm`, `descriptionAm`).
+- **Ethiopian Birr pricing** everywhere in Amharic mode, converted at
+  `NEXT_PUBLIC_ETB_RATE` (USD equivalents shown alongside).
+- **Ethiopian calendar dates** (ዓ.ም.) via a built-in Amete Mihret converter.
+- **Telebirr demo payment** — the payment screen offers Card / ቴሌብር tabs;
+  Telebirr validates Ethiopian mobile numbers (09…/07…).
+- **Chapa integration** (`CHAPA_SECRET_KEY`) — with a key set, checkout uses
+  Chapa hosted checkout in ETB (Telebirr, CBE Birr, M-Pesa, cards) and
+  verifies transactions server-side on return.
+
 ### Commerce
 - **Payments** — Stripe Checkout (test/live) when keys are configured, with a
   built-in **demo gateway** fallback (test card `4242 4242 4242 4242`) so the

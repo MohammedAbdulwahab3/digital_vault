@@ -11,8 +11,8 @@
   --color-cyan-brand: #06b6d4;
   --color-pink-brand: #ec4899;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-inter), sans-serif;
+  --font-sans: var(--font-inter), var(--font-ethiopic), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), var(--font-ethiopic), sans-serif;
 
   --radius-card: 16px;
 

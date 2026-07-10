@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { useLang } from "./language-provider";
 
 /** Scroll-into-view reveal with optional stagger delay. */
 export function Reveal({
@@ -98,6 +99,9 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function StatusBadge({ status }: { status: string }) {
+  const { t } = useLang();
+  const label =
+    (t.status as Record<string, string>)[status] ?? status.replace(/_/g, " ");
   return (
     <span
       className={cn(
@@ -105,7 +109,7 @@ export function StatusBadge({ status }: { status: string }) {
         STATUS_STYLES[status] ?? "bg-white/5 text-fog-2 border-white/10"
       )}
     >
-      {status.replace(/_/g, " ")}
+      {label}
     </span>
   );
 }

@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useStore } from "./store-provider";
-import { formatPrice } from "@/lib/utils";
-import { categoryLabel } from "@/lib/catalog";
+import { useLang } from "./language-provider";
+import { formatMoney } from "@/lib/utils";
 
 export function CartDrawer() {
   const { cart, cartOpen, setCartOpen, removeFromCart, user } = useStore();
+  const { locale, t } = useLang();
   const router = useRouter();
   const total = cart.reduce((sum, item) => sum + item.price, 0);
 
@@ -38,9 +39,9 @@ export function CartDrawer() {
           >
             <div className="flex items-center justify-between border-b border-white/5 px-6 py-5">
               <h2 className="font-display text-lg font-bold">
-                Your Cart{" "}
+                {t.cart.title}{" "}
                 <span className="ml-1 text-sm font-normal text-fog-2">
-                  {cart.length} {cart.length === 1 ? "item" : "items"}
+                  {cart.length} {cart.length === 1 ? t.cart.item : t.cart.items}
                 </span>
               </h2>
               <button
@@ -58,10 +59,14 @@ export function CartDrawer() {
               {cart.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
                   <span className="text-5xl opacity-40">🛒</span>
-                  <p className="text-fog-2">Your cart is empty</p>
-                  <button onClick={() => setCartOpen(false)} className="btn-outline mt-2 !py-2 text-sm">
-                    <Link href="/products">Browse products</Link>
-                  </button>
+                  <p className="text-fog-2">{t.cart.empty}</p>
+                  <Link
+                    href="/products"
+                    onClick={() => setCartOpen(false)}
+                    className="btn-outline mt-2 !py-2 text-sm"
+                  >
+                    {t.cart.browse}
+                  </Link>
                 </div>
               ) : (
                 <ul className="flex flex-col gap-3">
@@ -91,9 +96,13 @@ export function CartDrawer() {
                         >
                           {item.name}
                         </Link>
-                        <p className="text-xs text-fog-2">{categoryLabel(item.category)}</p>
+                        <p className="text-xs text-fog-2">
+                          {t.categories[item.category]?.short ?? item.category}
+                        </p>
                       </div>
-                      <span className="text-sm font-bold text-cyan-brand">{formatPrice(item.price)}</span>
+                      <span className="text-sm font-bold text-cyan-brand">
+                        {formatMoney(item.price, locale)}
+                      </span>
                       <button
                         onClick={() => removeFromCart(item.productId)}
                         className="rounded-full p-1.5 text-fog-2 transition hover:bg-red-500/10 hover:text-red-400"
@@ -112,17 +121,15 @@ export function CartDrawer() {
             {cart.length > 0 && (
               <div className="border-t border-white/5 px-6 py-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <span className="text-fog-2">Total</span>
+                  <span className="text-fog-2">{t.cart.total}</span>
                   <span className="font-display text-2xl font-bold text-gradient">
-                    {formatPrice(total)}
+                    {formatMoney(total, locale)}
                   </span>
                 </div>
                 <button onClick={checkout} className="btn-primary w-full !py-3">
-                  {user ? "Proceed to Checkout →" : "Sign in to Checkout →"}
+                  {user ? t.cart.checkout : t.cart.signInCheckout}
                 </button>
-                <p className="mt-3 text-center text-xs text-fog-2">
-                  Instant download after payment · 30-day money-back guarantee
-                </p>
+                <p className="mt-3 text-center text-xs text-fog-2">{t.cart.note}</p>
               </div>
             )}
           </motion.aside>

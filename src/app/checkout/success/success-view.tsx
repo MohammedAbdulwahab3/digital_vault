@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useStore } from "@/components/store-provider";
+import { useLang } from "@/components/language-provider";
 import { Spinner } from "@/components/ui";
 
 export function SuccessView() {
   const searchParams = useSearchParams();
   const { clearCartLocal, refreshUser } = useStore();
+  const { t } = useLang();
   const orderId = searchParams.get("order");
   const sessionId = searchParams.get("session_id");
   const [status, setStatus] = useState<"checking" | "paid" | "pending">("checking");
@@ -37,7 +39,7 @@ export function SuccessView() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
         <Spinner className="h-8 w-8" />
-        <p className="text-fog-2">Confirming your payment…</p>
+        <p className="text-fog-2">{t.checkout.confirming}</p>
       </div>
     );
   }
@@ -61,22 +63,20 @@ export function SuccessView() {
         </motion.div>
         <h1 className="mt-6 font-display text-3xl font-bold">
           {status === "paid" ? (
-            <>Order <span className="text-gradient">complete!</span></>
+            <>{t.checkout.successTitlePre}<span className="text-gradient">{t.checkout.successTitleSpan}</span></>
           ) : (
-            "Payment processing"
+            t.checkout.successProcessing
           )}
         </h1>
         <p className="mt-3 leading-relaxed text-fog-2">
-          {status === "paid"
-            ? "Your files are unlocked and ready. Head to your library to download everything — a commercial license is included with each product."
-            : "We're waiting for payment confirmation. Your downloads will unlock automatically once it clears."}
+          {status === "paid" ? t.checkout.successBody : t.checkout.successPendingBody}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/account/orders" className="btn-primary">
-            📦 Go to downloads
+            {t.checkout.goDownloads}
           </Link>
           <Link href="/products" className="btn-outline">
-            Keep browsing
+            {t.checkout.keepBrowsing}
           </Link>
         </div>
       </motion.div>

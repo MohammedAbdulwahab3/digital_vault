@@ -38,6 +38,9 @@ model Product {
   oldPrice        Int?
   description     String
   longDescription String   @default("")
+  // Amharic localization (falls back to English when empty)
+  nameAm          String   @default("")
+  descriptionAm   String   @default("")
   image           String
   badge           String?
   // JSON-encoded string arrays

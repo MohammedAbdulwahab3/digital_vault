@@ -8,8 +8,9 @@ import { ProductCard, type ProductCardData } from "@/components/product-card";
 import { ProductShowcase } from "@/components/showcase";
 import { ProductActions } from "./product-actions";
 import { ReviewSection } from "./review-section";
-import { formatPrice, parseJsonArray, formatDate } from "@/lib/utils";
-import { categoryDef, categoryLabel, platformDef } from "@/lib/catalog";
+import { formatMoney, parseJsonArray, formatDate } from "@/lib/utils";
+import { categoryDef, platformDef } from "@/lib/catalog";
+import { getServerDict } from "@/lib/locale-server";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params;
   const session = await getSession();
+  const { locale, t } = await getServerDict();
 
   const product = await db.product.findUnique({
     where: { slug },
@@ -53,6 +55,10 @@ export default async function ProductDetailPage({
       : null,
   ]);
 
+  const displayName = locale === "am" && product.nameAm ? product.nameAm : product.name;
+  const displayDesc =
+    locale === "am" && product.descriptionAm ? product.descriptionAm : product.description;
+  const catShort = t.categories[product.category]?.short ?? product.category;
   const formats = parseJsonArray(product.formats);
   const features = parseJsonArray(product.features);
   const platforms = parseJsonArray(product.platforms);
@@ -65,11 +71,11 @@ export default async function ProductDetailPage({
   const relatedCards: ProductCardData[] = related.map((p) => ({
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: locale === "am" && p.nameAm ? p.nameAm : p.name,
     category: p.category,
     price: p.price,
     oldPrice: p.oldPrice,
-    description: p.description,
+    description: locale === "am" && p.descriptionAm ? p.descriptionAm : p.description,
     image: p.image,
     badge: p.badge,
     formats: p.formats,
@@ -87,15 +93,15 @@ export default async function ProductDetailPage({
 
         {/* Breadcrumb */}
         <nav className="relative mb-8 flex items-center gap-2 text-sm text-fog-2">
-          <Link href="/" className="transition hover:text-fog">Home</Link>
+          <Link href="/" className="transition hover:text-fog">{t.product.breadcrumbHome}</Link>
           <span>/</span>
-          <Link href="/products" className="transition hover:text-fog">Products</Link>
+          <Link href="/products" className="transition hover:text-fog">{t.product.breadcrumbProducts}</Link>
           <span>/</span>
           <Link href={`/products?category=${product.category}`} className="transition hover:text-fog">
-            {categoryLabel(product.category)}
+            {catShort}
           </Link>
           <span>/</span>
-          <span className="text-fog">{product.name}</span>
+          <span className="text-fog">{displayName}</span>
         </nav>
 
         <div className="relative grid gap-12 lg:grid-cols-[1.15fr_1fr]">
@@ -134,29 +140,29 @@ export default async function ProductDetailPage({
                   : "border-purple-brand/30 bg-purple-brand/10 text-purple-brand"
               }`}
             >
-              {cat?.icon} {categoryLabel(product.category)}
+              {cat?.icon} {catShort}
             </span>
 
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight tracking-tight">
-              {product.name}
+              {displayName}
             </h1>
 
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-fog-2">
               <RatingStars rating={product.rating} />
               <span>
-                <strong className="text-fog">{product.rating > 0 ? product.rating.toFixed(1) : "New"}</strong>
-                {product.reviewCount > 0 && ` · ${product.reviewCount} reviews`}
+                <strong className="text-fog">{product.rating > 0 ? product.rating.toFixed(1) : t.product.newLabel}</strong>
+                {product.reviewCount > 0 && ` · ${product.reviewCount} ${t.product.reviews}`}
               </span>
               <span className="text-fog-2/50">•</span>
-              <span>{product.salesCount.toLocaleString()} sales</span>
+              <span>{product.salesCount.toLocaleString()} {t.product.sales}</span>
             </div>
 
-            <p className="mt-5 leading-relaxed text-fog-2">{product.description}</p>
+            <p className="mt-5 leading-relaxed text-fog-2">{displayDesc}</p>
 
             {platforms.length > 0 && (
               <div className="mt-6">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-fog-2">
-                  Ready-to-run code packages
+                  {t.product.codePackages}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {platforms.map((slug) => {
@@ -183,7 +189,7 @@ export default async function ProductDetailPage({
             {formats.length > 0 && (
               <div className="mt-5">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-fog-2">
-                  File formats
+                  {t.product.fileFormats}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {formats.map((f) => (
@@ -197,35 +203,35 @@ export default async function ProductDetailPage({
             <div className="mt-6 grid grid-cols-2 gap-3">
               {product.polyCount && (
                 <div className="glass rounded-xl p-3.5">
-                  <p className="text-[11px] uppercase tracking-widest text-fog-2">Poly count</p>
+                  <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.polyCount}</p>
                   <p className="mt-1 text-sm font-bold text-orange-300">{product.polyCount}</p>
                 </div>
               )}
               {product.rigType && (
                 <div className="glass rounded-xl p-3.5">
-                  <p className="text-[11px] uppercase tracking-widest text-fog-2">Rig</p>
+                  <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.rig}</p>
                   <p className="mt-1 text-sm font-bold">{product.rigType}</p>
                 </div>
               )}
               {product.blenderVersion && (
                 <div className="glass rounded-xl p-3.5">
-                  <p className="text-[11px] uppercase tracking-widest text-fog-2">Blender</p>
+                  <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.blender}</p>
                   <p className="mt-1 text-sm font-bold text-orange-300">{product.blenderVersion}</p>
                 </div>
               )}
               {product.renderer && (
                 <div className="glass rounded-xl p-3.5">
-                  <p className="text-[11px] uppercase tracking-widest text-fog-2">Renderer</p>
+                  <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.renderer}</p>
                   <p className="mt-1 text-sm font-bold">{product.renderer}</p>
                 </div>
               )}
               <div className="glass rounded-xl p-3.5">
-                <p className="text-[11px] uppercase tracking-widest text-fog-2">Package size</p>
+                <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.packageSize}</p>
                 <p className="mt-1 text-sm font-bold">{product.fileSize}</p>
               </div>
               <div className="glass rounded-xl p-3.5">
-                <p className="text-[11px] uppercase tracking-widest text-fog-2">Released</p>
-                <p className="mt-1 text-sm font-bold">{formatDate(product.createdAt)}</p>
+                <p className="text-[11px] uppercase tracking-widest text-fog-2">{t.product.released}</p>
+                <p className="mt-1 text-sm font-bold">{formatDate(product.createdAt, locale)}</p>
               </div>
             </div>
 
@@ -233,15 +239,15 @@ export default async function ProductDetailPage({
             <div className="gradient-ring glass mt-8 rounded-2xl p-6">
               <div className="flex items-end gap-3">
                 <span className="font-display text-4xl font-bold text-gradient">
-                  {formatPrice(product.price)}
+                  {formatMoney(product.price, locale)}
                 </span>
                 {product.oldPrice && (
                   <>
                     <span className="pb-1 text-lg text-fog-2 line-through">
-                      {formatPrice(product.oldPrice)}
+                      {formatMoney(product.oldPrice, locale)}
                     </span>
                     <span className="mb-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-400">
-                      Save {discount}%
+                      {t.product.save} {discount}%
                     </span>
                   </>
                 )}
@@ -260,9 +266,9 @@ export default async function ProductDetailPage({
               />
 
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-fog-2">
-                <span>⚡ Instant download</span>
-                <span>🛡️ Commercial license</span>
-                <span>🔄 Lifetime updates</span>
+                <span>{t.product.instantDownload}</span>
+                <span>{t.product.commercialLicense}</span>
+                <span>{t.product.lifetimeUpdates}</span>
               </div>
             </div>
 
@@ -292,7 +298,7 @@ export default async function ProductDetailPage({
         {/* Long description */}
         {product.longDescription && (
           <Reveal className="relative mt-16 max-w-3xl">
-            <h2 className="font-display text-2xl font-bold">About this product</h2>
+            <h2 className="font-display text-2xl font-bold">{t.product.about}</h2>
             <p className="mt-4 whitespace-pre-line leading-relaxed text-fog-2">
               {product.longDescription}
             </p>
@@ -324,7 +330,7 @@ export default async function ProductDetailPage({
         {relatedCards.length > 0 && (
           <section className="relative mt-20">
             <h2 className="mb-8 font-display text-2xl font-bold">
-              More {categoryLabel(product.category)} assets
+              {t.product.moreAssets} {catShort} {t.product.assets}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {relatedCards.map((p) => (

@@ -5,15 +5,8 @@ import { useCallback } from "react";
 import { motion } from "framer-motion";
 import { ProductCard, type ProductCardData } from "@/components/product-card";
 import { CATEGORIES } from "@/lib/catalog";
+import { useLang } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
-
-const SORTS = [
-  { value: "popular", label: "Most Popular" },
-  { value: "newest", label: "Newest" },
-  { value: "rating", label: "Top Rated" },
-  { value: "price-asc", label: "Price: Low → High" },
-  { value: "price-desc", label: "Price: High → Low" },
-];
 
 const PRICE_CAPS = [25, 50, 75, 100];
 
@@ -32,6 +25,15 @@ export function CatalogView({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useLang();
+
+  const SORTS = [
+    { value: "popular", label: t.catalog.sortPopular },
+    { value: "newest", label: t.catalog.sortNewest },
+    { value: "rating", label: t.catalog.sortRating },
+    { value: "price-asc", label: t.catalog.sortPriceAsc },
+    { value: "price-desc", label: t.catalog.sortPriceDesc },
+  ];
 
   const setParam = useCallback(
     (key: string, value: string | null) => {
@@ -50,15 +52,15 @@ export function CatalogView({
       <header className="relative mb-10">
         <h1 className="font-display text-4xl font-bold tracking-tight">
           {query ? (
-            <>Results for “<span className="text-gradient">{query}</span>”</>
+            <>{t.catalog.resultsFor} “<span className="text-gradient">{query}</span>”</>
           ) : (
-            <>Explore the <span className="text-gradient">vault</span></>
+            <>{t.catalog.explorePre}<span className="text-gradient">{t.catalog.exploreSpan}</span></>
           )}
         </h1>
         <p className="mt-2 text-fog-2">
-          {products.length} {products.length === 1 ? "product" : "products"}
+          {products.length} {products.length === 1 ? t.catalog.product : t.catalog.products}
           {activeCategory !== "all" &&
-            ` in ${CATEGORIES.find((c) => c.slug === activeCategory)?.label ?? activeCategory}`}
+            ` ${t.catalog.inCategory} ${t.categories[activeCategory]?.label ?? activeCategory}`}
         </p>
       </header>
 
@@ -74,7 +76,7 @@ export function CatalogView({
                 : "glass text-fog-2 hover:text-fog"
             )}
           >
-            All
+            {t.catalog.all}
           </button>
           {CATEGORIES.map((cat) => (
             <button
@@ -87,7 +89,7 @@ export function CatalogView({
                   : "glass text-fog-2 hover:text-fog"
               )}
             >
-              {cat.icon} {cat.short}
+              {cat.icon} {t.categories[cat.slug]?.short ?? cat.short}
             </button>
           ))}
         </div>
@@ -106,7 +108,7 @@ export function CatalogView({
           </select>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-fog-2">Max price:</span>
+            <span className="text-xs text-fog-2">{t.catalog.maxPrice}</span>
             {PRICE_CAPS.map((cap) => (
               <button
                 key={cap}
@@ -128,7 +130,7 @@ export function CatalogView({
               onClick={() => router.push("/products")}
               className="text-xs text-fog-2 underline underline-offset-4 transition hover:text-fog"
             >
-              Clear all filters
+              {t.catalog.clearFilters}
             </button>
           )}
         </div>
@@ -138,12 +140,12 @@ export function CatalogView({
       {products.length === 0 ? (
         <div className="glass rounded-3xl py-24 text-center">
           <p className="text-4xl">🔭</p>
-          <p className="mt-4 font-display text-xl font-bold">Nothing found</p>
+          <p className="mt-4 font-display text-xl font-bold">{t.catalog.nothingFound}</p>
           <p className="mt-2 text-sm text-fog-2">
-            Try a different search or category — or request exactly what you need.
+            {t.catalog.nothingFoundSub}
           </p>
           <a href="/requests" className="btn-primary mt-6 inline-flex">
-            Request custom work
+            {t.catalog.requestCustom}
           </a>
         </div>
       ) : (

@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { Footer } from "@/components/footer";
 import { CatalogView } from "./catalog-view";
+import { getLocale } from "@/lib/locale-server";
 import type { ProductCardData } from "@/components/product-card";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ export default async function ProductsPage({
 }: {
   searchParams: Promise<Search>;
 }) {
+  const locale = await getLocale();
   const params = await searchParams;
   const q = params.q?.trim();
   const category = params.category;
@@ -57,11 +59,11 @@ export default async function ProductsPage({
   const cardData: ProductCardData[] = products.map((p) => ({
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: locale === "am" && p.nameAm ? p.nameAm : p.name,
     category: p.category,
     price: p.price,
     oldPrice: p.oldPrice,
-    description: p.description,
+    description: locale === "am" && p.descriptionAm ? p.descriptionAm : p.description,
     image: p.image,
     badge: p.badge,
     formats: p.formats,

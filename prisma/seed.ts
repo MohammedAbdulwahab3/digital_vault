@@ -455,6 +455,72 @@ async function main() {
   }
   console.log(`  ✓ ${products.length} products`);
 
+  // ── Amharic localization (shown when the store runs in አማርኛ) ──
+  const amharic: Record<string, { nameAm: string; descriptionAm: string }> = {
+    "nexa-pro-dashboard": {
+      nameAm: "ኔክሳ ፕሮ ዳሽቦርድ",
+      descriptionAm: "ከ50+ ክፍሎች፣ ጨለማ/ብርሃን ገጽታዎች እና 12 ገጾች ጋር የተሟላ የSaaS አስተዳደር ዳሽቦርድ።",
+    },
+    "aurora-landing-page": {
+      nameAm: "ኦሮራ ማረፊያ ገጽ",
+      descriptionAm: "ዘመናዊ የSaaS ማረፊያ ገጽ ከ9 ክፍሎች፣ ጨለማ/ብርሃን ሁነታ እና ለሽያጭ የተመቻቸ አቀማመጥ ጋር።",
+    },
+    "atlas-agency-site": {
+      nameAm: "አትላስ የኤጀንሲ ድህረ-ገጽ",
+      descriptionAm: "የሽልማት ደረጃ የኤጀንሲ ፖርትፎሊዮ ከGSAP እንቅስቃሴዎች እና የፕሮጀክት ማሳያ ገጾች ጋር።",
+    },
+    "sync-finance-app": {
+      nameAm: "ሲንክ የፋይናንስ መተግበሪያ",
+      descriptionAm: "የፊንቴክ ሞባይል መተግበሪያ ከ30+ ገጾች፡ ምዝገባ፣ ካርዶች፣ ገንዘብ ማስተላለፍ እና ትንታኔ።",
+    },
+    "healthkit-app-design": {
+      nameAm: "ሄልዝኪት የጤና መተግበሪያ",
+      descriptionAm: "የጤና እና የአካል ብቃት መተግበሪያ ከስፖርት መከታተያ፣ የምግብ እቅድ እና የእንቅልፍ ትንታኔ ጋር።",
+    },
+    "wander-travel-app": {
+      nameAm: "ዋንደር የጉዞ መተግበሪያ",
+      descriptionAm: "የጉዞ ማስያዣ መተግበሪያ፡ ፍለጋ፣ የጉዞ እቅድ፣ ማስያዝ፣ ካርታዎች እና ማራኪ የቦታ ገጾች።",
+    },
+    "quantum-ui-kit": {
+      nameAm: "ኳንተም UI ኪት",
+      descriptionAm: "500+ ክፍሎች፣ 100+ ገጾች እና የተሟላ የዲዛይን ሲስተም ከቶከኖች እና ሰነዶች ጋር።",
+    },
+    "prism-mobile-kit": {
+      nameAm: "ፕሪዝም ሞባይል ኪት",
+      descriptionAm: "የሞባይል UI ኪት ከ280 ክፍሎች፣ የiOS እና Material 3 ስሪቶች ጎን ለጎን።",
+    },
+    "cyber-ronin-character": {
+      nameAm: "ሳይበር ሮኒን ገጸ-ባህሪ",
+      descriptionAm: "ሙሉ ሪግ ያለው የሳይበርፐንክ ተዋጊ ከ50+ እንቅስቃሴዎች፣ PBR ገጽታዎች እና ተለዋዋጭ ትጥቅ ጋር።",
+    },
+    "luna-mage-fantasy": {
+      nameAm: "ሉና አስማተኛ",
+      descriptionAm: "በእጅ የተቀቡ ገጽታዎች፣ የፊት ሪግ እና 30+ የአስማት እንቅስቃሴዎች ያሉት ገጸ-ባህሪ።",
+    },
+    "sci-fi-pilot-pack": {
+      nameAm: "የጠፈር አብራሪዎች ጥቅል",
+      descriptionAm: "3 የጠፈር አብራሪ ገጸ-ባህሪያት ከተለዋዋጭ ትጥቅ፣ የሚቀያየሩ ቁር እና የበረራ አቀማመጦች ጋር።",
+    },
+    "low-poly-adventure-hero": {
+      nameAm: "ዝቅተኛ-ፖሊ ጀብደኛ ጀግና",
+      descriptionAm: "ለጨዋታ ዝግጁ ዝቅተኛ-ፖሊ ገጸ-ባህሪ ለቀጥታ ጊዜ ማሳያ የተመቻቸ። 30 እንቅስቃሴዎች።",
+    },
+    "vertex-commerce-kit": {
+      nameAm: "ቨርቴክስ የንግድ ኪት",
+      descriptionAm: "የተሟላ የኢ-ኮመርስ ቴምፕሌት፡ ሱቅ፣ ቅርጫት፣ ክፍያ እና የአስተዳደር ገጾች።",
+    },
+    "taskly-productivity-app": {
+      nameAm: "ታስክሊ የስራ መተግበሪያ",
+      descriptionAm: "የተግባር አስተዳደር መተግበሪያ ከትኩረት ሰዓት ቆጣሪ፣ ልማዶች መከታተያ እና ስታቲስቲክስ ጋር።",
+    },
+  };
+  for (const [slug, translation] of Object.entries(amharic)) {
+    if (created[slug]) {
+      await db.product.update({ where: { id: created[slug].id }, data: translation });
+    }
+  }
+  console.log("  ✓ Amharic product localization");
+
   // ── Reviews (+ product rating rollups) ──
   let reviewCount = 0;
   for (const [slug, reviews] of Object.entries(reviewSeeds)) {

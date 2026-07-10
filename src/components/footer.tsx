@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "./store-provider";
+import { useLang } from "./language-provider";
 
 export function Footer() {
   const { toast } = useStore();
+  const { t } = useLang();
   const [email, setEmail] = useState("");
 
   const subscribe = async (e: React.FormEvent) => {
@@ -16,7 +18,7 @@ export function Footer() {
       body: JSON.stringify({ email }),
     });
     if (res.ok) {
-      toast("🎉", "Subscribed! Welcome to the vault.");
+      toast("🎉", t.toasts.subscribed);
       setEmail("");
     } else {
       const data = await res.json().catch(() => ({}));
@@ -29,50 +31,45 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
         <div>
           <span className="font-display text-xl font-bold text-gradient">⬡ PixelVault</span>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-fog-2">
-            The premium marketplace for digital designers. Discover, create, and
-            sell beautiful digital products.
-          </p>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-fog-2">{t.footer.tagline}</p>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Products</h4>
+          <h4 className="mb-3 text-sm font-semibold">{t.footer.products}</h4>
           <ul className="flex flex-col gap-2 text-sm text-fog-2">
-            <li><Link className="transition hover:text-fog" href="/products?category=web">Web Templates</Link></li>
-            <li><Link className="transition hover:text-fog" href="/products?category=app">App Templates</Link></li>
-            <li><Link className="transition hover:text-fog" href="/products?category=blender-3d">Blender Characters</Link></li>
-            <li><Link className="transition hover:text-fog" href="/products?category=ui-kit">UI Kits</Link></li>
+            <li><Link className="transition hover:text-fog" href="/products?category=web">{t.categories.web.label}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/products?category=app">{t.categories.app.label}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/products?category=blender-3d">{t.categories["blender-3d"].label}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/products?category=ui-kit">{t.categories["ui-kit"].label}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Marketplace</h4>
+          <h4 className="mb-3 text-sm font-semibold">{t.footer.marketplace}</h4>
           <ul className="flex flex-col gap-2 text-sm text-fog-2">
-            <li><Link className="transition hover:text-fog" href="/products">All Products</Link></li>
-            <li><Link className="transition hover:text-fog" href="/requests">Request Custom Work</Link></li>
-            <li><Link className="transition hover:text-fog" href="/account/orders">My Downloads</Link></li>
-            <li><Link className="transition hover:text-fog" href="/register">Become a Member</Link></li>
+            <li><Link className="transition hover:text-fog" href="/products">{t.footer.allProducts}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/requests">{t.footer.requestWork}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/account/orders">{t.footer.myDownloads}</Link></li>
+            <li><Link className="transition hover:text-fog" href="/register">{t.footer.becomeMember}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Stay in the loop</h4>
-          <p className="mb-3 text-sm text-fog-2">
-            Exclusive drops and creator deals, monthly. No spam.
-          </p>
+          <h4 className="mb-3 text-sm font-semibold">{t.footer.stayLoop}</h4>
+          <p className="mb-3 text-sm text-fog-2">{t.footer.stayLoopSub}</p>
           <form onSubmit={subscribe} className="flex gap-2">
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@studio.com"
+              placeholder={t.footer.emailPlaceholder}
               className="field flex-1 !rounded-full"
             />
-            <button className="btn-primary !px-5" type="submit">Join</button>
+            <button className="btn-primary !px-5" type="submit">{t.footer.join}</button>
           </form>
         </div>
       </div>
       <div className="border-t border-white/5">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-fog-2 sm:flex-row">
-          <span>© 2026 PixelVault. All rights reserved.</span>
+          <span>{t.footer.rights}</span>
           <div className="flex gap-4 text-base">
             <a href="#" aria-label="Twitter" className="transition hover:text-fog">𝕏</a>
             <a href="#" aria-label="GitHub" className="transition hover:text-fog">⊕</a>

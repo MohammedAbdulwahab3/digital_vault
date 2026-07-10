@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-import { formatPrice, formatDate } from "@/lib/utils";
+import { formatMoney, formatDate } from "@/lib/utils";
+import { getServerDict } from "@/lib/locale-server";
 import { StatusBadge } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export const metadata = { title: "My Account" };
 export default async function AccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/account");
+  const { locale, t } = await getServerDict();
 
   const [orders, itemCount, requests, wishlistCount] = await Promise.all([
     db.order.findMany({
@@ -33,18 +35,18 @@ export default async function AccountPage() {
     .reduce((sum, o) => sum + o.total, 0);
 
   const stats = [
-    { label: "Products owned", value: String(itemCount), icon: "🗃️" },
-    { label: "Total invested", value: formatPrice(totalSpent), icon: "💎" },
-    { label: "Open requests", value: String(requests.filter((r) => !["COMPLETED", "DECLINED"].includes(r.status)).length), icon: "💬" },
-    { label: "Wishlisted", value: String(wishlistCount), icon: "❤️" },
+    { label: t.account.productsOwned, value: String(itemCount), icon: "🗃️" },
+    { label: t.account.totalInvested, value: formatMoney(totalSpent, locale), icon: "💎" },
+    { label: t.account.openRequests, value: String(requests.filter((r) => !["COMPLETED", "DECLINED"].includes(r.status)).length), icon: "💬" },
+    { label: t.account.wishlisted, value: String(wishlistCount), icon: "❤️" },
   ];
 
   return (
     <div>
       <h1 className="font-display text-3xl font-bold tracking-tight">
-        Hey, <span className="text-gradient">{user.name.split(" ")[0]}</span> 👋
+        {t.account.hey} <span className="text-gradient">{user.name.split(" ")[0]}</span> 👋
       </h1>
-      <p className="mt-2 text-fog-2">Here's what's happening in your vault.</p>
+      <p className="mt-2 text-fog-2">{t.account.happening}</p>
 
       <div className="mt-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
         {stats.map((stat) => (
@@ -58,15 +60,15 @@ export default async function AccountPage() {
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-xl font-bold">Recent orders</h2>
+          <h2 className="font-display text-xl font-bold">{t.account.recentOrders}</h2>
           <Link href="/account/orders" className="text-sm text-purple-brand hover:underline">
-            View all →
+            {t.account.viewAll}
           </Link>
         </div>
         {orders.length === 0 ? (
           <div className="glass rounded-2xl py-12 text-center">
-            <p className="text-fog-2">No orders yet.</p>
-            <Link href="/products" className="btn-primary mt-4 inline-flex">Browse products</Link>
+            <p className="text-fog-2">{t.account.noOrders}</p>
+            <Link href="/products" className="btn-primary mt-4 inline-flex">{t.cart.browse}</Link>
           </div>
         ) : (
           <div className="glass overflow-hidden rounded-2xl">
@@ -74,11 +76,11 @@ export default async function AccountPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Order</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Date</th>
+                    <th>{t.account.order}</th>
+                    <th>{t.account.itemsCol}</th>
+                    <th>{t.account.totalCol}</th>
+                    <th>{t.account.statusCol}</th>
+                    <th>{t.account.dateCol}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,9 +88,9 @@ export default async function AccountPage() {
                     <tr key={order.id}>
                       <td className="font-mono text-xs">{order.orderNumber}</td>
                       <td>{order.items.map((i) => i.name).join(", ")}</td>
-                      <td className="font-semibold">{formatPrice(order.total)}</td>
+                      <td className="font-semibold">{formatMoney(order.total, locale)}</td>
                       <td><StatusBadge status={order.status} /></td>
-                      <td className="text-fog-2">{formatDate(order.createdAt)}</td>
+                      <td className="text-fog-2">{formatDate(order.createdAt, locale)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -100,9 +102,9 @@ export default async function AccountPage() {
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-xl font-bold">Custom requests</h2>
+          <h2 className="font-display text-xl font-bold">{t.account.requests}</h2>
           <Link href="/account/requests/new" className="text-sm text-purple-brand hover:underline">
-            + New request
+            {t.requests.newRequest}
           </Link>
         </div>
         {requests.length === 0 ? (
@@ -125,8 +127,8 @@ export default async function AccountPage() {
                 <div className="min-w-0">
                   <p className="truncate font-semibold">{req.title}</p>
                   <p className="mt-0.5 text-xs text-fog-2">
-                    Updated {formatDate(req.updatedAt)}
-                    {req.quoteAmount != null && ` · Quote: ${formatPrice(req.quoteAmount)}`}
+                    Updated {formatDate(req.updatedAt, locale)}
+                    {req.quoteAmount != null && ` · ${t.requests.quote}: ${formatMoney(req.quoteAmount, locale)}`}
                   </p>
                 </div>
                 <StatusBadge status={req.status} />
